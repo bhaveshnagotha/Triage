@@ -12,6 +12,7 @@ import RSVPCard from './Pages/RSVP-Card/rsvp-card'
 import PostEvent from './Pages/Post-Event/post-event'
 import EmailBuilder from './Pages/Email-Builder/email-builder'
 import Connections from './Pages/Connections/connections'
+import UserList from './Pages/Users/user-list'
 
 
 
@@ -37,6 +38,9 @@ function App() {
 
                 {/* Connections */}
                 <Route path="/Connections" element={<Connections/>}/>
+
+                {/* Users */}
+                <Route path="/user-list" element={<UserList/>}/>
                 
 
 

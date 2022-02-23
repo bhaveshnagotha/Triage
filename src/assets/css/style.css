@@ -8518,3 +8518,9 @@ ul.comment-list li ul.children {
 	justify-content: center;
 	font-size: 11px;
 }
+
+
+.ql-editor {
+	min-height: 10em;
+	background: #fff;
+}

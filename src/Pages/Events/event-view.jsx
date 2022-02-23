@@ -48,8 +48,7 @@ const EventView = () => {
             <div className="card">
               <div className="card-body">
                 <div className="project-title">
-                  <h5 className="card-title">Event Name</h5>
-                  <small className="block text-ellipsis m-b-15"><span className="text-xs">2</span> <span className="text-muted">open tasks, </span><span className="text-xs">5</span> <span className="text-muted">tasks completed</span></small>
+                  <h5 className="card-title">Event Name</h5>                  
                 </div>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel elit neque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum sollicitudin libero vitae est consectetur, a molestie tortor consectetur. Aenean tincidunt interdum ipsum, id pellentesque diam suscipit ut. Vivamus massa mi, fermentum eget neque eget, imperdiet tristique lectus. Proin at purus ut sem pellentesque tempor sit amet ut lectus. Sed orci augue, placerat et pretium ac, hendrerit in felis. Integer scelerisque libero non metus commodo, et hendrerit diam aliquet. Proin tincidunt porttitor ligula, a tincidunt orci pellentesque nec. Ut ultricies maximus nulla id consequat. Fusce eu consequat mi, eu euismod ligula. Aliquam porttitor neque id massa porttitor, a pretium velit vehicula. Morbi volutpat tincidunt urna, vel ullamcorper ligula fermentum at. </p>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel elit neque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum sollicitudin libero vitae est consectetur, a molestie tortor consectetur. Aenean tincidunt interdum ipsum, id pellentesque diam suscipit ut. Vivamus massa mi, fermentum eget neque eget, imperdiet tristique lectus. Proin at purus ut sem pellentesque tempor sit amet ut lectus. Sed orci augue, placerat et pretium ac, hendrerit in felis. Integer scelerisque libero non metus commodo, et hendrerit diam aliquet. Proin tincidunt porttitor ligula, a tincidunt orci pellentesque nec. Ut ultricies maximus nulla id consequat. Fusce eu consequat mi, eu euismod ligula. Aliquam porttitor neque id massa porttitor, a pretium velit vehicula. Morbi volutpat tincidunt urna, vel ullamcorper ligula fermentum at. </p>
@@ -57,7 +56,7 @@ const EventView = () => {
             </div>
             <div className="card">
               <div className="card-body">
-                <h5 className="card-title m-b-20">Uploaded Event files</h5>
+                <h5 className="card-title m-b-20">Uploaded Event Images</h5>
                 <div className="row">
                   <div className="col-md-3 col-sm-4 col-lg-4 col-xl-3">
                     <div className="uploaded-box">
@@ -179,7 +178,7 @@ const EventView = () => {
                     </tr>
                   </tbody>
                 </table>
-                <p className="m-b-5">Progress <span className="text-success float-end">40%</span></p>
+                <p className="m-b-5">Sold <span className="text-success float-end">40%</span></p>
                 <div className="progress progress-xs mb-0">
                   <div className="progress-bar bg-success" role="progressbar" data-bs-toggle="tooltip" title="40%" style={{width: '40%'}} />
                 </div>

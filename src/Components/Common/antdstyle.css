@@ -95,12 +95,16 @@ td.ant-table-column-sort {
 }
 .ant-pagination-item-active {
     font-weight: 500;
-    background: rgb(0, 197, 251) !important;
-    border-color: rgb(0, 197, 251) !important;
+    background: #B44C27 !important;
+    border-color: #B44C27 !important;
     color: rgb(255, 255, 255) !important;
     z-index: 1 !important;
 }
 
 .ant-table-pagination-right {
     float: none !important;
+}
+
+.ant-pagination-item:focus, .ant-pagination-item:hover{
+    border-color:#B44C27 !important;
 }

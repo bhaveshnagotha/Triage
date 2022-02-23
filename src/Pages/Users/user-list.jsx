@@ -80,14 +80,12 @@ const UserList = () => {
         title: 'Created By',
         dataIndex: 'name',
         sorter: (a, b) => a.name.length - b.name.length,
-      },
-    
+      },    
       {
         title: 'Created On',
         dataIndex: 'created_date',
         sorter: (a, b) => a.created_date.length - b.created_date.length,
-      },
-      
+      },      
       {
         title: 'Action',
         render: (text, record) => (

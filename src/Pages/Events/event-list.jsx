@@ -13,14 +13,15 @@ const EventList = () => {
               localStorage.removeItem("firstload")
             },1000)
         }
-     });     
 
-     $(document).ready(function(){  
-      $('.select').select2({        
-        minimumResultsForSearch: -1,
-        width: '100%'
-      });
-    })
+        if($('.select').length > 0) {
+          $('.select').select2({
+            minimumResultsForSearch: -1,
+            width: '100%'
+          });
+        }
+
+     });         
 
   return (
     

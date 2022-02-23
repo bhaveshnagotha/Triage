@@ -43,7 +43,7 @@ const LeftSideBar = () => {
                 <a href="#"><i className="la la-user-plus" /> <span> Users</span> <span className="menu-arrow" /></a>
                 <ul style={{display: 'none'}}>
                   <li><Link className={pathname.includes('/user-list') ?"active" :""} to="/user-list">User List</Link></li>                  
-                  <li><Link className={pathname.includes('/user-role') ?"active" :""} to="/user-role">User Role</Link></li>
+                  <li><Link className={pathname.includes('/user-roles') ?"active" :""} to="/user-roles">User Roles</Link></li>
                                     
                 </ul>
               </li>

@@ -105,9 +105,9 @@ const AddEvent = () => {
     };
 
     // Additional Participants End
-  
 
     useEffect( ()=>{
+
         let firstload = localStorage.getItem("firstload")
         if(firstload === "true"){          
             setTimeout(function() {
@@ -116,7 +116,12 @@ const AddEvent = () => {
             },1000)
         }
 
-        
+        if($('.select').length > 0) {
+          $('.select').select2({
+            minimumResultsForSearch: -1,
+            width: '100%'
+          });
+        }        
 
         $("#eventLocationSelect").on("change", function () {         
           handleELChange($(this).val())
@@ -124,14 +129,7 @@ const AddEvent = () => {
 
      });
 
-     $(document).ready(function(){ 
-       
-      $('.select').select2({        
-        minimumResultsForSearch: -1,
-        width: '100%'
-      });
-      
-    })
+     
 
   return (
     <div>
@@ -250,8 +248,11 @@ const AddEvent = () => {
 
                 <div className="col-sm-3 col-md-3">
                   <div className="form-group">
-                    <label>Add Location</label>                    
-                    <input className="form-control" type="text" />
+                    <label>Add Location</label>                   
+                    <div className="input-group">
+                      <input className="form-control" type="text" />
+                      <span className="input-group-append input-group-addon"><span className="input-group-text"><i className="fa fa-map-marker" /></span></span>
+                    </div> 
                   </div>
                 </div>
 
@@ -352,9 +353,12 @@ const AddEvent = () => {
                     {eventLocationshow[0].multiEL ===true && <div className="col-sm-2">
                       <div className="form-group">
                         <label>Add Locatoin</label>
+                        <div className="input-group">
                         <input className="form-control" type="text" name="eventAddLocation"                            
                         value={x.eventAddLocation}
                         onChange={e => handleInputAEChange(e, i)}/>
+                        <span className="input-group-append input-group-addon"><span className="input-group-text"><i className="fa fa-map-marker" /></span></span>
+                        </div>
                       </div>
                     </div>
                     }
@@ -431,6 +435,8 @@ const AddEvent = () => {
                   })}
 
                     <div className="row row-sm">
+
+                      
                       <div className="col-sm-2 ml-auto">
                         <div className="form-group">
                           <button className="btn btn-primary btn-block" onClick={() => handleAddAPClick()} type="button"><i className="fa fa-plus" /></button>

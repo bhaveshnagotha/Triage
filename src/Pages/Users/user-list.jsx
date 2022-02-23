@@ -12,18 +12,18 @@ import "../../Components/Common/antdstyle.css"
 const UserList = () => {
   
   const [data, setData] = useState([
-    {id:1,name:"Bernardo Galaviz",image:placeholders,username:"bernardog",company:"Tbz Technologies",created_date:"5 Jan 2022",role:"Superadmin",status:"Active"},
-    {id:2,name:"Catherine Manseau",image:placeholders,username:"catherine",company:"Ascent Solutions",created_date:"5 Jan 2022",role:"Admin",status:"Inactive"},
-    {id:3,name:"Jeffery Lalor",image:placeholders,username:"jefferyl",company:"Ascent Solutions",created_date:"5 Jan 2022",role:"Staff",status:"Active"},
-    {id:4,name:"Jeffrey Warden",image:placeholders,username:"jeffreyw",company:"Tbz Technologies",created_date:"5 Jan 2022",role:"Superadmin",status:"Active"},
-    {id:5,name:"John Due",image:placeholders,username:"johnd",company:"Ascent Solutions",created_date:"14 Jan 2022",role:"Staff",status:"Active"},
-    {id:6,name:"John Smith",image:placeholders,username:"johns",company:"Ascent Solutions",created_date:"14 Jan 2022",role:"Staff",status:"Inactive"},
-    {id:7,name:"Lesley Grauer",image:placeholders,username:"lesleyg",company:"Ascent Solutions",created_date:"14 Jan 2022",role:"Staff",status:"Inactive"},
-    {id:8,name:"Loren Gatlin",image:placeholders,username:"loreng",company:"Ascent Solutions",created_date:"14 Jan 2022",role:"Staff",status:"Inactive"},
-    {id:9,name:"Mike Litorus",image:placeholders,username:"mikel",company:"Ascent Solutions",created_date:"14 Jan 2022",role:"Staff",status:"Inactive"},
-    {id:10,name:"Richard Miles",image:placeholders,username:"rechardm",company:"Ascent Solutions",created_date:"14 Jan 2022",role:"Staff",status:"Inactive"},
-    {id:11,name:"Tarah Shropshire",image:placeholders,username:"tarahs",company:"Ascent Solutions",created_date:"14 Jan 2022",role:"Staff",status:"Inactive"},
-    {id:12,name:"Wilmer Deluna",image:placeholders,username:"wilmerd",company:"Ascent Solutions",created_date:"14 Jan 2022",role:"Staff",status:"Inactive"},
+    {id:1,name:"Bernardo Galaviz",image:placeholders,username:"bernardog",user_type:"Client",created_date:"5 Jan 2022",role:"Superadmin",status:"Active"},
+    {id:2,name:"Catherine Manseau",image:placeholders,username:"catherine",user_type:"Employee",created_date:"5 Jan 2022",role:"Admin",status:"Inactive"},
+    {id:3,name:"Jeffery Lalor",image:placeholders,username:"jefferyl",user_type:"Client",created_date:"5 Jan 2022",role:"Staff",status:"Active"},
+    {id:4,name:"Jeffrey Warden",image:placeholders,username:"jeffreyw",user_type:"Employee",created_date:"5 Jan 2022",role:"Superadmin",status:"Active"},
+    {id:5,name:"John Due",image:placeholders,username:"johnd",user_type:"Employee",created_date:"14 Jan 2022",role:"Staff",status:"Active"},
+    {id:6,name:"John Smith",image:placeholders,username:"johns",user_type:"Employee",created_date:"14 Jan 2022",role:"Staff",status:"Inactive"},
+    {id:7,name:"Lesley Grauer",image:placeholders,username:"lesleyg",user_type:"Client",created_date:"14 Jan 2022",role:"Staff",status:"Inactive"},
+    {id:8,name:"Loren Gatlin",image:placeholders,username:"loreng",user_type:"Client",created_date:"14 Jan 2022",role:"Staff",status:"Inactive"},
+    {id:9,name:"Mike Litorus",image:placeholders,username:"mikel",user_type:"Client",created_date:"14 Jan 2022",role:"Staff",status:"Inactive"},
+    {id:10,name:"Richard Miles",image:placeholders,username:"rechardm",user_type:"Employee",created_date:"14 Jan 2022",role:"Staff",status:"Inactive"},
+    {id:11,name:"Tarah Shropshire",image:placeholders,username:"tarahs",user_type:"Client",created_date:"14 Jan 2022",role:"Staff",status:"Inactive"},
+    {id:12,name:"Wilmer Deluna",image:placeholders,username:"wilmerd",user_type:"Employee",created_date:"14 Jan 2022",role:"Staff",status:"Inactive"},
   ]);
   useEffect( ()=>{
     if($('.select').length > 0) {
@@ -54,9 +54,9 @@ const UserList = () => {
       },
 
       {
-        title: 'Company',
-        dataIndex: 'company', 
-        sorter: (a, b) => a.company.length - b.company.length,
+        title: 'User Type',
+        dataIndex: 'user_type', 
+        sorter: (a, b) => a.user_type.length - b.user_type.length,
       },
       {
         title: 'Role',
@@ -66,16 +66,7 @@ const UserList = () => {
            >{text}</span>
           ),
         sorter: (a, b) => a.role.length - b.role.length,
-      },
-      {
-        title: 'Status',
-        dataIndex: 'status',
-        render: (text, record) => (
-            <span className={text ==="Inactive" ? "badge bg-inverse-danger" :  "badge bg-inverse-success" }
-           >{text}</span>
-          ),
-        sorter: (a, b) => a.role.length - b.role.length,
-      },
+      },      
       {
         title: 'Created By',
         dataIndex: 'name',
@@ -85,6 +76,19 @@ const UserList = () => {
         title: 'Created On',
         dataIndex: 'created_date',
         sorter: (a, b) => a.created_date.length - b.created_date.length,
+      },
+      {
+        title: 'Status',
+        dataIndex: 'status',
+        render: (text, record) => (
+          <div className="action-label text-center">
+          <a className="btn btn-white btn-sm btn-rounded" href="#">
+            <i className={text === "Active" ? "fa fa-dot-circle-o text-success" 
+          :"fa fa-dot-circle-o text-danger" } /> {text}
+          </a>
+        </div>
+          ),
+        sorter: (a, b) => a.status.length - b.status.length,
       },      
       {
         title: 'Action',
@@ -117,7 +121,7 @@ const UserList = () => {
                 <h3 className="page-title">User List </h3>
                 <ul className="breadcrumb">
                   <li className="breadcrumb-item"><Link to="/user-list">Users</Link></li>
-                  <li className="breadcrumb-item active">User List</li>
+                  <li className="breadcrumb-item active">List</li>
                 </ul>
               </div>
               <div className="col-auto float-end ml-auto">
@@ -137,11 +141,11 @@ const UserList = () => {
             <div className="col-sm-4 col-md-2"> 
               <div className="form-group form-focus select-focus">
                 <select className="select floating"> 
-                  <option>Select Company</option>
-                  <option>Tbz Technologies</option>
-                  <option>Ascent Solutions</option>
+                  <option>Select Type</option>
+                  <option>Client</option>
+                  <option>Employee</option>
                 </select>
-                <label className="focus-label">Company</label>
+                <label className="focus-label">User Type</label>
               </div>
             </div>
             <div className="col-sm-4 col-md-2"> 
@@ -210,7 +214,7 @@ const UserList = () => {
                     </div>
                     <div className="col-sm-6">
                       <div className="form-group">
-                        <label>Last Name</label>
+                        <label>Last Name <span className="text-danger">*</span></label>
                         <input className="form-control" type="text" />
                       </div>
                     </div>
@@ -219,158 +223,112 @@ const UserList = () => {
                         <label>Username <span className="text-danger">*</span></label>
                         <input className="form-control" type="text" />
                       </div>
-                    </div>
+                    </div>                    
                     <div className="col-sm-6">
                       <div className="form-group">
-                        <label>Email <span className="text-danger">*</span></label>
-                        <input className="form-control" type="email" />
-                      </div>
-                    </div>
-                    <div className="col-sm-6">
-                      <div className="form-group">
-                        <label>Password</label>
+                        <label>Password <span className="text-danger">*</span></label>
                         <input className="form-control" type="password" />
                       </div>
-                    </div>
+                    </div>                                        
                     <div className="col-sm-6">
                       <div className="form-group">
-                        <label>Confirm Password</label>
-                        <input className="form-control" type="password" />
+                        <label>User Type <span className="text-danger">*</span></label><br/>
+                        <div class="form-check form-check-inline">
+                          <input defaultChecked type="checkbox" class="form-check-input" id="client"/>
+                          <label class="form-check-label" for="client">
+                            Client
+                          </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input type="checkbox" class="form-check-input" id="employee"/>
+                          <label class="form-check-label" for="employee">
+                            Employee
+                          </label>
+                        </div>
+
+                      </div>
+                    </div>                    
+
+                    <div className="col-sm-6">
+                      <div className="form-group">
+                        <label>User Role <span className="text-danger">*</span></label><br/>                        
+                        <div class="form-check form-check-inline">
+                          <input defaultChecked type="checkbox" class="form-check-input" id="superadmin"/>
+                          <label class="form-check-label" for="superadmin">
+                            Superadmin
+                          </label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                          <input type="checkbox" class="form-check-input" id="admin"/>
+                          <label class="form-check-label" for="admin">
+                            Admin
+                          </label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                          <input type="checkbox" class="form-check-input" id="staff"/>
+                          <label class="form-check-label" for="staff">
+                            Staff
+                          </label>
+                        </div>
+
+                      </div>                      
+                    </div>
+
+                    <div className="col-sm-6">
+                      <div className="form-group">
+                        <label>Status</label><br/>
+                        <div className="form-check form-check-inline">
+                          <input defaultChecked className="form-check-input" type="radio" name="status" id="active" defaultValue="Active" />
+                          <label className="form-check-label" htmlFor="active">Active</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                          <input className="form-check-input" type="radio" name="status" id="inactive" defaultValue="Inactive" />
+                          <label className="form-check-label" htmlFor="inactive">Inactive</label>
+                        </div>
+
                       </div>
                     </div>
+
+                    
+                    
+                  </div>                   
+                  <div className="row">
+                    
+                    <div className="col-md-12 mt-4">
+                      <div className="form-group">
+                        <h4>Business Contact</h4>                        
+                      </div>
+                    </div>
+
                     <div className="col-sm-6">
                       <div className="form-group">
-                        <label>Phone </label>
+                        <label>Company Name</label>
                         <input className="form-control" type="text" />
                       </div>
                     </div>
                     <div className="col-sm-6">
                       <div className="form-group">
-                        <label>Role</label>
-                        <select className="select">
-                          <option>Admin</option>
-                          <option>Client</option>
-                          <option>Employee</option>
-                        </select>
+                        <label>Company Address</label>
+                        <input className="form-control" type="text" />
                       </div>
                     </div>
                     <div className="col-sm-6">
                       <div className="form-group">
-                        <label>Company</label>
-                        <select className="select">
-                          <option>Global Technologies</option>
-                          <option>Delta Infotech</option>
-                        </select>
+                        <label>Phone No</label>
+                        <input className="form-control" type="text" />
                       </div>
                     </div>
-                    <div className="col-sm-6">  
+                    <div className="col-sm-6">
                       <div className="form-group">
-                        <label>Employee ID <span className="text-danger">*</span></label>
-                        <input type="text" className="form-control floating" />
+                        <label>Email</label>
+                        <input className="form-control" type="email" />
                       </div>
                     </div>
+
                   </div>
-                  <div className="table-responsive m-t-15">
-                    <table className="table table-striped custom-table">
-                      <thead>
-                        <tr>
-                          <th>Module Permission</th>
-                          <th className="text-center">Read</th>
-                          <th className="text-center">Write</th>
-                          <th className="text-center">Create</th>
-                          <th className="text-center">Delete</th>
-                          <th className="text-center">Import</th>
-                          <th className="text-center">Export</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Employee</td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Holidays</td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Leaves</td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Events</td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                          <td className="text-center">
-                            <input defaultChecked type="checkbox" />
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+
                   <div className="submit-section">
                     <button className="btn btn-primary submit-btn">Submit</button>
                   </div>

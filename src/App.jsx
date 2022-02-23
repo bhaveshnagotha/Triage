@@ -13,6 +13,7 @@ import PostEvent from './Pages/Post-Event/post-event'
 import EmailBuilder from './Pages/Email-Builder/email-builder'
 import Connections from './Pages/Connections/connections'
 import UserList from './Pages/Users/user-list'
+import UserRoles from './Pages/Users/user-roles'
 
 
 
@@ -41,6 +42,7 @@ function App() {
 
                 {/* Users */}
                 <Route path="/user-list" element={<UserList/>}/>
+                <Route path="/user-roles" element={<UserRoles/>}/>
                 
 
 

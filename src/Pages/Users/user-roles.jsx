@@ -8,8 +8,30 @@ import 'antd/dist/antd.css';
 import {itemRender,onShowSizeChange} from "../../Components/Common/paginationfunction"
 import "../../Components/Common/antdstyle.css"
 
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+import * as yup from 'yup';
+
+let schema = yup.object().shape({
+  user_role_name: yup.string().required("Please enter user role name").max(35),
+  for_company: yup.string().required("Please enter for company").max(35)  
+});
+
 
 const UserRoles = () => {
+
+  const { register, handleSubmit, formState: { errors }} = useForm(
+    {
+      resolver:yupResolver(schema),
+    }
+  );
+
+  const onSubmitClick = (data) => {    
+    console.log(data);
+  } 
+  console.log(errors);
+
   
   const [data, setData] = useState([
     {id:1,role_name:"Superadmin",company_name:"Ascent Infosolutions",created_by:"john doe",created_date:"23 Feb 2022",status:"Active"},
@@ -174,18 +196,24 @@ const UserRoles = () => {
                 </button>
               </div>
               <div className="modal-body">
-                <form>
+                <form onSubmit={handleSubmit(onSubmitClick)}>
                   <div className="row">
                     <div className="col-sm-5">
                       <div className="form-group">
                         <label>User Role Name <span className="text-danger">*</span></label>
-                        <input className="form-control" type="text" />
+                        <input className={errors.user_role_name ? 'form-control is-invalid': 'form-control'} type="text" name="user_role_name" {...register("user_role_name")}/>
+                        {errors.user_role_name && <div className="invalid-feedback">
+                          {errors.user_role_name?.message}
+                        </div>}
                       </div>
                     </div>                    
                     <div className="col-sm-5">
                       <div className="form-group">
                         <label>For Company <span className="text-danger">*</span></label>
-                        <input className="form-control" type="text" />
+                        <input className={errors.for_company ? 'form-control is-invalid': 'form-control'} type="text" name="for_company" {...register("for_company")} />
+                        {errors.for_company && <div className="invalid-feedback">
+                          {errors.for_company?.message}
+                        </div>}
                       </div>
                     </div>                                                            
                     <div className="col-sm-2">  
@@ -299,7 +327,7 @@ const UserRoles = () => {
                     </table>
                   </div>
                   <div className="submit-section">
-                    <button className="btn btn-primary submit-btn">Submit</button>
+                    <button className="btn btn-primary submit-btn" type="submit">Submit</button>
                   </div>
                 </form>
               </div>

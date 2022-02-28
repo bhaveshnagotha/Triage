@@ -7925,6 +7925,7 @@ ul.comment-list li ul.children {
 		border-bottom-width: 2px;
 		border-color: transparent;
 		border-bottom-color: #B44C27;
+		color:#B44C27;		
 		background-color: transparent;
 		transition: none 0s ease 0s; 
 		-moz-transition: none 0s ease 0s; 
@@ -8523,4 +8524,65 @@ ul.comment-list li ul.children {
 .ql-editor {
 	min-height: 10em;
 	background: #fff;
+}
+
+
+
+
+
+
+
+
+
+
+/* Custom File Upload Style Start*/
+.files-upload-ui input {
+    outline: 2px dashed #B44C27;
+    outline-offset: -10px;
+    -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+    transition: outline-offset .15s ease-in-out, background-color .15s linear;
+    padding: 45px 0px 92px 25%;
+    text-align: center !important;
+    margin: 0;
+    width: 100% !important;
+}
+.files-upload-ui input:focus{     outline: 2px dashed #B44C27;  outline-offset: -10px;
+    -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+    transition: outline-offset .15s ease-in-out, background-color .15s linear; border:1px solid #B44C27;
+ }
+.files-upload-ui{ position:relative}
+.files-upload-ui:after {  pointer-events: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 50px;
+    right: 0;
+    height: 56px;
+    display: block;
+    margin: 0 auto;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+.color input{ background-color:#f1f1f1;}
+.files-upload-ui:before {
+    position: absolute;
+    bottom: 10px;
+    left: 0;  pointer-events: none;
+    width: 100%;
+    right: 0;
+    height: 57px;
+    content: " or drag it here. ";
+    display: block;
+    margin: 0 auto;
+    color: #B44C27;
+    font-weight: 600;
+    text-transform: capitalize;
+    text-align: center;
+}
+
+/* Custom File Upload Style Start*/
+
+
+.invalid-feedback{
+	display: block!important;
 }

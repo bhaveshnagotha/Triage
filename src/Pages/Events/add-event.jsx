@@ -1,15 +1,33 @@
 import React, {useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
 import ReactQuill from 'react-quill'; // ES6
-
-
-
 import $ from 'jquery';
+
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+
+let schema = yup.object().shape({
+  event_title: yup.string().required("Please enter event title"),
+  event_start_date: yup.string().required("Please enter start date"),
+  event_end_date: yup.string().required("Please enter end date"),
+  event_start_time: yup.string().required("Please enter start time"),
+  event_end_time: yup.string().required("Please enter end time")
+});
 
 const AddEvent = () => {
 
+
+  const { register, handleSubmit, formState: { errors }} = useForm(
+    {
+      resolver:yupResolver(schema),
+    });
   
+  const onSubmitClick = (data) => {    
+    console.log(data);
+  } 
+  console.log(errors);
 
   const [eventLocationshow, setEventLocationshow] = useState([
     { 
@@ -194,40 +212,55 @@ const AddEvent = () => {
         {/* /Page Header */}
         <div className="row">
           <div className="col-sm-12">
-            <form>
+            <form onSubmit={handleSubmit(onSubmitClick)}>
               <div className="row">
                 <div className="col-sm-4 col-md-4">
                   <div className="form-group">
                     <label>Event Title <span className="text-danger">*</span></label>
-                    <input className="form-control" type="text" />
+                    <input className={errors.event_title ? 'form-control is-invalid': 'form-control'} type="text" {...register("event_title")}/>
+                    {errors.event_title && <div className="invalid-feedback">
+                      {errors.event_title?.message}
+                    </div>}
                   </div>
                 </div>
 
                 <div className="col-sm-2 col-md-2">
                   <div className="form-group">
                     <label>Start Date <span className="text-danger">*</span></label>
-                    <input className="form-control datetimepicker" type="date" />
+                    <input className={errors.event_start_date ? 'form-control is-invalid datetimepicker': 'form-control datetimepicker'} type="date" {...register("event_start_date")}/>
+                    {errors.event_start_date && <div className="invalid-feedback">
+                      {errors.event_start_date?.message}
+                    </div>}
                   </div>
                 </div>
 
                 <div className="col-sm-2 col-md-2">
                   <div className="form-group">
                     <label>End Date <span className="text-danger">*</span></label>
-                    <input className="form-control datetimepicker" type="date" />
+                    <input className={errors.event_end_date ? 'form-control is-invalid datetimepicker': 'form-control datetimepicker'} type="date" {...register("event_end_date")}/>
+                    {errors.event_end_date && <div className="invalid-feedback">
+                      {errors.event_end_date?.message}
+                    </div>}
                   </div>
                 </div>
 
                 <div className="col-sm-2 col-md-2">
                   <div className="form-group">
                     <label>Start Time <span className="text-danger">*</span></label>
-                    <input className="form-control" type="time" />
+                    <input className={errors.event_start_time ? 'form-control is-invalid': 'form-control'} type="time" {...register("event_start_time")}/>
+                    {errors.event_start_time && <div className="invalid-feedback">
+                      {errors.event_start_time?.message}
+                    </div>}
                   </div>
                 </div>
 
                 <div className="col-sm-2 col-md-2">
                   <div className="form-group">
                     <label>End Time <span className="text-danger">*</span></label>
-                    <input className="form-control" type="time" />
+                    <input className={errors.event_end_time ? 'form-control is-invalid': 'form-control'} type="time" {...register("event_end_time")}/>
+                    {errors.event_end_time && <div className="invalid-feedback">
+                      {errors.event_end_time?.message}
+                    </div>}
                   </div>
                 </div>
 
@@ -452,7 +485,7 @@ const AddEvent = () => {
                 </div>
               </div>
               <div className="submit-section">                
-                <button className="btn btn-primary submit-btn">Submit</button>
+                <button className="btn btn-primary submit-btn" type="submit">Submit</button>
               </div>
             </form>
           </div>

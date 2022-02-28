@@ -108,3 +108,7 @@ td.ant-table-column-sort {
 .ant-pagination-item:focus, .ant-pagination-item:hover{
     border-color:#B44C27 !important;
 }
+
+.ant-table-tbody > tr .ant-table-wrapper:only-child .ant-table{
+    margin: 0px 46px 0px 46px;
+}

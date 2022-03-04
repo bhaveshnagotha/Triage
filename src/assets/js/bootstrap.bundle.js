@@ -1,3 +1,12 @@
+/* eslint-disable no-self-assign */
+/* eslint-disable array-callback-return */
+/* eslint-disable strict */
+/* eslint-disable no-useless-concat */
+/* eslint-disable default-case */
+/* eslint-disable no-mixed-operators */
+/* eslint-disable no-restricted-globals */
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-expressions */
 /*!
   * Bootstrap v5.1.3 (https://getbootstrap.com/)
   * Copyright 2011-2021 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
@@ -2083,7 +2092,7 @@
   }
 
   // import { isHTMLElement } from './instanceOf';
-  function getBoundingClientRect(element, // eslint-disable-next-line unused-imports/no-unused-vars
+  function getBoundingClientRect(element, 
   includeScale) {
 
     var rect = element.getBoundingClientRect();

@@ -1,6 +1,6 @@
 import React, {useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import ReactQuill from 'react-quill'; // ES6
+import ReactQuill from 'react-quill';
 import $ from 'jquery';
 
 import { useForm } from 'react-hook-form';
@@ -60,6 +60,44 @@ const AddEvent = () => {
      return false
   }; 
   
+  let mainRef = React.createRef();
+
+  const modules = {
+    toolbar: {
+      container: [
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+        [{ 'size': ['small', 'large', 'huge'] }],  // custom dropdown
+        [{ 'font': [] }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],        
+        [
+          {'list': 'ordered'},
+          {'list': 'bullet'}
+        ],
+        ['link'],
+        ['image'],
+        [{ 'color': [] }, { 'background': [] }], 
+        
+        [{ 'align': [] }],
+      
+        ['clean']                                         // remove formatting button    
+      ],
+      handlers: {
+        'undo': () => {
+          let myEditor = mainRef?.current?.getEditor();
+          return myEditor?.history?.undo();
+        },
+        'redo': function () {
+          let myEditor = mainRef?.current?.getEditor();
+          return myEditor?.history?.redo();
+        }
+      }
+    },
+    history: {
+      delay: 200,
+      maxStack: 500,
+      userOnly: true
+    }
+  };
     // Add Multiple events start
     const [addEventList, setInputEventList] = useState([
       { 
@@ -268,7 +306,7 @@ const AddEvent = () => {
                   <div className="form-group">
                     <label>Event Description</label>                    
                     {/* <textarea className="form-control" rows="10"></textarea> */}
-                    <ReactQuill />
+                    <ReactQuill modules={modules}/>
                   </div>
                 </div>
                

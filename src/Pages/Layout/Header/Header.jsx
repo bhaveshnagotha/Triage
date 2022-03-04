@@ -1,14 +1,16 @@
-import React, { useState,useEffect } from "react";
-import { withRouter } from 'react-router-dom';
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React from "react";
+//import React, { useState,useEffect } from "react";
+//import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { Helmet } from "react-helmet";
+//import { Helmet } from "react-helmet";
 import logo from './../../../assets/img/logo.png';
 import avatar21 from './../../../assets/img/profiles/avatar-21.jpg';
 
-import  lnEnglish from './../../../assets/img/flags/us.png';
-import  lnFrench from './../../../assets/img/flags/fr.png';
-import  lnSpanish from './../../../assets/img/flags/es.png';
-import  lnGerman from './../../../assets/img/flags/de.png';
+// import  lnEnglish from './../../../assets/img/flags/us.png';
+// import  lnFrench from './../../../assets/img/flags/fr.png';
+// import  lnSpanish from './../../../assets/img/flags/es.png';
+// import  lnGerman from './../../../assets/img/flags/de.png';
 
 const Header = () => {    
   return (
@@ -21,7 +23,7 @@ const Header = () => {
           </Link>
         </div>
         {/* /Logo */}
-        <a id="toggle_btn" href="">
+        <a id="toggle_btn" href="#">
           <span className="bar-icon"><span />
             <span />
             <span />
@@ -36,7 +38,7 @@ const Header = () => {
         {/* Header Menu */}
         <ul className="nav user-menu">          
           {/* Flag */}
-          <li className="nav-item dropdown has-arrow flag-nav">
+          {/* <li className="nav-item dropdown has-arrow flag-nav">
             <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">
               <img src={lnEnglish} alt="" height={20} /> <span>English</span>
             </a>
@@ -54,10 +56,10 @@ const Header = () => {
                     <img src={lnGerman} alt="" height={16} /> German
                   </a>
             </div>
-          </li>
+          </li> */}
           {/* /Flag */}
           {/* Notifications */}
-          <li className="nav-item dropdown">
+          {/* <li className="nav-item dropdown">
             <a href="#" className="dropdown-toggle nav-link" data-bs-toggle="dropdown">
               <i className="fa fa-bell-o" /> <span className="badge badge-pill">3</span>
             </a>
@@ -139,10 +141,10 @@ const Header = () => {
                 <Link onClick={()=>localStorage.setItem("minheight","true")} to="/app/administrator/activities">View all Notifications</Link>
               </div>
             </div>
-          </li>
+          </li> */}
           {/* /Notifications */}
           {/* Message Notifications */}
-          <li className="nav-item dropdown">
+          {/* <li className="nav-item dropdown">
             <a href="#" className="dropdown-toggle nav-link" data-bs-toggle="dropdown">
               <i className="fa fa-comment-o" /> <span className="badge badge-pill">8</span>
             </a>
@@ -244,17 +246,16 @@ const Header = () => {
                 <Link onClick={()=>localStorage.setItem("minheight","true")} to="/conversation/chat">View all Messages</Link>
               </div>
             </div>
-          </li>
+          </li> */}
           {/* /Message Notifications */}
           <li className="nav-item dropdown has-arrow main-drop">
             <a href="#" className="dropdown-toggle nav-link" data-bs-toggle="dropdown">
               <span className="user-img me-1"><img src={avatar21} alt="" />
                 <span className="status online" /></span>
-              <span>Admin</span>
+              <span>Super Admin</span>
             </a>
             <div className="dropdown-menu">
-              <Link className="dropdown-item" to="/dashboard">My Profile</Link>
-              <Link className="dropdown-item" to="/dashboard">Settings</Link>
+              <Link className="dropdown-item" to="/profile">My Profile</Link>              
               <Link className="dropdown-item" to="/login">Logout</Link>
             </div>
           </li>

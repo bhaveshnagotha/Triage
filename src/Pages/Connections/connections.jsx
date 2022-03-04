@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/anchor-has-content */
+/* eslint-disable no-unused-vars */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState,useEffect } from 'react';
 //import { Link } from 'react-router-dom';
 import $ from 'jquery';
@@ -68,7 +71,7 @@ const Connections = () => {
               <a href="#" className="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
               <div className="dropdown-menu dropdown-menu-right">
                 <a className="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#add_user"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                <a className="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_user"><i className="fa fa-trash-o m-r-5" /> Delete</a>
+                <a className="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_directory_member"><i className="fa fa-trash-o m-r-5" /> Delete</a>
               </div>
             </div>
           ),
@@ -203,7 +206,22 @@ const Connections = () => {
         title: 'Phone No',
         dataIndex: 'phone_no',
         sorter: (a, b) => a.phone_no.length - b.phone_no.length,
-      }      
+      },
+      
+      {
+        title: "Action",
+        dataIndex: "",
+        key: "x",
+        render: (text, record) => (
+              <div className="dropdown dropdown-action text-end">
+                <a href="#" className="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
+                <div className="dropdown-menu dropdown-menu-right">
+                  <a className="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#add_user"><i className="fa fa-pencil m-r-5" /> Edit</a>
+                  <a className="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_directory_member"><i className="fa fa-trash-o m-r-5" /> Delete</a>
+                </div>
+              </div>
+            ),
+      }
     ]
 
 
@@ -478,6 +496,31 @@ const Connections = () => {
         </div>
       </div>
       {/* Create Group Modal End */}                            
+
+      {/* Delete User Modal */}
+      <div className="modal custom-modal fade" id="delete_directory_member" role="dialog">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-body">
+              <div className="form-header">
+                <h3>Delete User</h3>
+                <p>Are you sure want to delete?</p>
+              </div>
+              <div className="modal-btn delete-action">
+                <div className="row">
+                  <div className="col-6">
+                    <a href="" className="btn btn-primary continue-btn">Delete</a>
+                  </div>
+                  <div className="col-6">
+                    <a href="" data-bs-dismiss="modal" className="btn btn-primary cancel-btn">Cancel</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* /Delete User Modal */}
 
         
     </div>

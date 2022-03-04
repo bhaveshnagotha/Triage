@@ -17,8 +17,8 @@ import "../src/assets/css/bootstrap.min.css";
 
 // Custom Style File
 
-//import '../src/assets/js/jquery-3.2.1.min.js';
-//import "../src/assets/js/jquery-ui.min.js";
+import '../src/assets/js/jquery-3.2.1.min.js';
+import "../src/assets/js/jquery-ui.min.js";
 import "../src/assets/js/multiselect.min.js";
 //import '../src/assets/js/bootstrap.bundle.js';
 import '../src/assets/css/select2.min.css';
@@ -30,13 +30,17 @@ import '../src/assets/js/select2.min.js';
 
 import '../src/assets/js/jquery.slimscroll.min.js';
 
-//import "../src/assets/js/bootstrap-datetimepicker.min.js";
+import "../src/assets/js/bootstrap-datetimepicker.min.js";
 
 import "../src/assets/js/task.js";
+
+import '../src/assets/js/jquery.smartWizard.min.js';
 
 import "../src/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css";
 import "../src/assets/css/bootstrap-datetimepicker.min.css";
 import '../src/assets/css/style.css';
+
+import '../src/assets/css/smart_wizard_all.min.css';
 
 
 

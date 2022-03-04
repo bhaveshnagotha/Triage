@@ -8,12 +8,14 @@ import { Routes, Route } from 'react-router-dom'
 import EventList from './Pages/Events/event-list'
 import AddEvent from './Pages/Events/add-event'
 import EventView from './Pages/Events/event-view'
-import RSVPCard from './Pages/RSVP-Card/rsvp-card'
 import PostEvent from './Pages/Post-Event/post-event'
 import EmailBuilder from './Pages/Email-Builder/email-builder'
 import Connections from './Pages/Connections/connections'
 import UserList from './Pages/Users/user-list'
 import UserRoles from './Pages/Users/user-roles'
+import Profile from './Pages/Profile/profile'
+import RSVPForm from './Pages/RSVP/rsvp-form'
+import RSVPList from './Pages/RSVP/rsvp-list'
 
 
 
@@ -21,6 +23,7 @@ function App() {
     return ( 
         <Routes>            
             <Route path="/" exact element={<Layout/>} > 
+                <Route path="/" element={<Dashboard />}/>
                 <Route path="/dashboard" element={<Dashboard />}/>
 
                 {/* Events */}
@@ -29,7 +32,8 @@ function App() {
                 <Route path="/event-view" element={<EventView/>}/>
 
                 {/* RSVP Card */}
-                <Route path="/rsvp-card" element={<RSVPCard/>}/>
+                <Route path="/rsvp-form" element={<RSVPForm/>}/>
+                <Route path="/rsvp-list" element={<RSVPList/>}/>
 
                 {/* Post Event */}
                 <Route path="/post-event" element={<PostEvent/>}/>
@@ -43,6 +47,8 @@ function App() {
                 {/* Users */}
                 <Route path="/user-list" element={<UserList/>}/>
                 <Route path="/user-roles" element={<UserRoles/>}/>
+
+                <Route path="/profile" element={<Profile/>}/>
                 
 
 

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom'
@@ -26,9 +27,15 @@ const LeftSideBar = () => {
                   <li><Link to = "/events">Hybrid</Link></li>                  
                 </ul>
               </li>
-              <li className={pathname.includes('/rsvp-card') ?"active" :""}>
-                <Link to="/rsvp-card"><i className="la la-ticket" /> <span> RSVP Card</span></Link>              
-              </li>
+
+              <li className="submenu">
+                <a href="#"><i className="la la-ticket" /> <span> RSVP</span> <span className="menu-arrow" /></a>
+                <ul style={{display: 'none'}}>
+                  <li><Link className={pathname.includes('/rsvp-form') ?"active" :""} to="/rsvp-form">Form Design</Link></li>                  
+                  <li><Link className={pathname.includes('/rsvp-list') ?"active" :""} to="/rsvp-list">Lists</Link></li>
+                                    
+                </ul>
+              </li>              
               <li className={pathname.includes('/post-event') ?"active" :""}>
                 <Link to="/post-event"><i className="la la-ticket" /> <span> Post Event</span></Link>              
               </li>

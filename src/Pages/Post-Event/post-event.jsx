@@ -1,7 +1,7 @@
-import React, {useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import $ from 'jquery';
-import placeholders from './../../assets/img/placeholder.jpg';
+import React from 'react';
+//import { Link } from 'react-router-dom';
+//import $ from 'jquery';
+//import placeholders from './../../assets/img/placeholder.jpg';
 
 const PostEvent = () => {  
     

@@ -8,7 +8,7 @@ import {BarChart,Bar, Cell,ResponsiveContainer,
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   } from 'recharts';
   
-  //import "../../index.css"
+  //import "../../index.css"  
   
   const barchartdata = [
     { y: '2006', "Total Income" : 100, 'Total Outcome' : 90 },
@@ -38,8 +38,8 @@ const Dashboard = () => {
               window.location.reload(1)
               localStorage.removeItem("firstload")
             },1000)
-        }
-     });
+        }        
+     },[]);
 
   return (
     <div>

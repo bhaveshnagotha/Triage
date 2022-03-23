@@ -387,8 +387,8 @@ const Connections = () => {
                                   </div>  
 
                                 </div>                      
-                              <div className="text-end">
-                                <button type="submit" className="btn btn-primary">Submit</button>
+                              <div className="text-center">
+                                <button type="submit" className="btn btn-primary submit-btn min-w-btn-145">SUBMIT</button>
                               </div>
                             </form>
                           </div>
@@ -488,7 +488,7 @@ const Connections = () => {
                   </div>}
                 </div>                
                 <div className="submit-section">
-                  <button className="btn btn-primary submit-btn" type="submit">Submit</button>
+                  <button className="btn btn-primary submit-btn" type="submit">SUBMIT</button>
                 </div>
               </form>
             </div>

@@ -301,7 +301,7 @@ const RSVPForm = () => {
                         <div className="card-body">
                           <ul className="nav nav-tabs nav-tabs-solid nav-justified flex-column">
                             <li className="nav-item"><a className="nav-link active" data-bs-toggle="tab" href="#basic-form">Basic Form</a></li>
-                            <li className="nav-item"><a className="nav-link" data-bs-toggle="tab" href="#custom-form">Custom Form</a></li>
+                            <li className="nav-item"><a className="nav-link" data-bs-toggle="tab" href="#custom-form">Create your own Form</a></li>                            
                           </ul>
                         </div>
                       </div>
@@ -331,9 +331,9 @@ const RSVPForm = () => {
                                       </div>
                                     </div>
                                   </div>
-                                  <div className="col-md-3">
-                                    <a href="#" className="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_basic_form"><i className="fa fa-plus" />Create Custom Form</a>                                                                              
-                                  </div>
+                                  {/* <div className="col-md-3">
+                                    <a href="#" className="" data-bs-toggle="modal" data-bs-target="#add_basic_form">Create your own Form</a>                                                                              
+                                  </div> */}
                                 </div>
                                 <div className="row">
                                   <div className="col-md-12">
@@ -342,8 +342,7 @@ const RSVPForm = () => {
                                         <thead>
                                           <tr>                                            
                                             <th className="text-center">Field Name</th>
-                                            <th className="text-center">Status</th>                                            
-                                            <th>&nbsp;</th>
+                                            <th className="text-center">Status</th>                                                                                        
                                           </tr>
                                         </thead>
                                         <tbody id="table_alterations_tbody">
@@ -364,8 +363,7 @@ const RSVPForm = () => {
                                               </div>
                                             
                                             </td>
-                                            <td></td>
-                                            <td></td>                                            
+                                            <td></td>                                                                                      
                                           </tr>
                                           <tr>                                            
                                             <td><lable>First Name</lable></td>
@@ -374,8 +372,7 @@ const RSVPForm = () => {
                                                 <input type="checkbox" id="events_module" className="check" defaultChecked/>
                                                 <label htmlFor="events_module" className="checktoggle">checkbox</label>
                                               </div>
-                                            </td>    
-                                            <td className="d-grid"><a href="#" data-bs-toggle="modal" data-bs-target="#delete_bf_field" className="delete-icon float-start text-center"><i className="fa fa-trash-o" /></a></td>
+                                            </td>                                                
                                           </tr>
                                           <tr>                                            
                                             <td><lable>Last Name</lable></td>
@@ -384,8 +381,7 @@ const RSVPForm = () => {
                                                 <input type="checkbox" id="basic_form_field1" className="check" />
                                                 <label htmlFor="basic_form_field1" className="checktoggle">checkbox</label>
                                               </div>
-                                            </td>
-                                            <td className="d-grid"><a href="#" data-bs-toggle="modal" data-bs-target="#delete_bf_field" className="delete-icon float-start text-center"><i className="fa fa-trash-o" /></a></td>
+                                            </td>                                            
                                           </tr>
                                           <tr>                                            
                                             <td><lable>Email Address</lable></td>
@@ -394,8 +390,7 @@ const RSVPForm = () => {
                                                 <input type="checkbox" id="basic_form_field2" className="check" defaultChecked/>
                                                 <label htmlFor="basic_form_field2" className="checktoggle">checkbox</label>
                                               </div>
-                                            </td>
-                                            <td className="d-grid"><a href="#" data-bs-toggle="modal" data-bs-target="#delete_bf_field" className="delete-icon float-start text-center"><i className="fa fa-trash-o" /></a></td>
+                                            </td>                                            
                                           </tr>
                                           <tr>                                            
                                             <td><lable>Phone No</lable></td>
@@ -404,8 +399,7 @@ const RSVPForm = () => {
                                                 <input type="checkbox" id="basic_form_field3" className="check"/>
                                                 <label htmlFor="basic_form_field3" className="checktoggle">checkbox</label>
                                               </div>
-                                            </td>
-                                            <td className="d-grid"><a href="#" data-bs-toggle="modal" data-bs-target="#delete_bf_field" className="delete-icon float-start text-center"><i className="fa fa-trash-o" /></a></td>
+                                            </td>                                            
                                           </tr>
                                           <tr>                                            
                                             <td><lable>No of People Attending</lable></td>
@@ -414,8 +408,7 @@ const RSVPForm = () => {
                                                 <input type="checkbox" id="basic_form_field4" className="check" defaultChecked/>
                                                 <label htmlFor="basic_form_field4" className="checktoggle">checkbox</label>
                                               </div>
-                                            </td>
-                                            <td className="d-grid"><a href="#" data-bs-toggle="modal" data-bs-target="#delete_bf_field" className="delete-icon float-start text-center"><i className="fa fa-trash-o" /></a></td>
+                                            </td>                                            
                                           </tr>                                          
                                           
                                         </tbody>                                        
@@ -424,7 +417,7 @@ const RSVPForm = () => {
                                     
                                   </div>                                  
                                 </div>
-                              </section>
+                              </section>                              
                                 <div className="submit-section">                
                                   <button className="btn btn-custom-theme submit-btn min-w-btn-145" type="submit">PREVIEW</button>
                                   <button className="btn btn-custom-theme submit-btn ms-1 min-w-btn-145" type="submit">DRAFT</button>
@@ -433,13 +426,11 @@ const RSVPForm = () => {
                               </div>                              
                             </div>
                             
-                            
-                            
-                          <div id="custom-form" className="tab-pane fade">
+                            <div id="custom-form" className="tab-pane fade">
 
                           <section className="review-section">
                           <div className="row">
-                              <div className="col-md-9">
+                              <div className="col-md-8">
                                 <div className="review-header1 text-left">
                                   <h3 className="review-title">Custom Form</h3>
                                   <div className="text-muted">
@@ -454,52 +445,64 @@ const RSVPForm = () => {
                                     </div>
                                 </div>
                               </div>
-                              <div className="col-md-3">
-                                  <a href="#" className="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_question"><i className="fa fa-plus" /> Add Question</a>
-                              </div>
-                            </div>                                                        
-                            <hr/>
+                              {/* <div className="col-md-4">
+                                  <a href="#" className="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_basic_form"><i className="fa fa-plus" /> Create Your Own Form</a>
+                              </div> */}
+                            </div>                                                                                    
                               <div className="card-box">                                
                                 <div className="table-responsive">
-                                  <table className="table table-striped custom-table mb-0">                                  
-                                    <thead>
-                                      <tr>                                        
-                                        <th>Question Type</th>
-                                        <th>Form Type</th>
-                                        <th className="text-center">Options Type</th>                                        
-                                        <th>&nbsp;</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      <tr>                                        
-                                        <td>Will you be able to make it?</td>
-                                        <td>Radio Button</td>
-                                        <td>Yead!, Maybe/Note sure, I can't</td>  
-                                        <td><a href="#" className="delete-icon mt-2 ms-2" data-bs-toggle="modal" data-bs-target="#delete_cf_question"><i className="fa fa-trash-o" /></a></td>                                                                              
-                                      </tr>
-                                      <tr>                                        
-                                        <td>How man people are you going to bring?</td>
-                                        <td>Dropdown</td>
-                                        <td>Just me!</td>
-                                        <td><a href="#" className="delete-icon mt-2 ms-2" data-bs-toggle="modal" data-bs-target="#delete_cf_question"><i className="fa fa-trash-o" /></a></td>                                        
-                                      </tr>
-                                      <tr>                                        
-                                        <td>Comments or Questions</td>
-                                        <td>Textarea</td>
-                                        <td>-</td>
-                                        <td><a href="#" className="delete-icon mt-2 ms-2" data-bs-toggle="modal" data-bs-target="#delete_cf_question"><i className="fa fa-trash-o" /></a></td>                                        
-                                      </tr>
-                                    </tbody>
-                                  </table>
+                                <table className="table table-bordered table-review review-table mb-0" id="table_alterations">
+                                  <thead>
+                                    <tr>                                            
+                                      <th className="text-center">Field Name</th>
+                                      <th className="text-center">Status</th>                                            
+                                      <th>&nbsp;</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody id="table_alterations_tbody">
+                                  <tr>                                            
+                                      <td>
+                                        <lable>Please let us know if you will be able to make it.</lable><br/>
+                                        <div className="form-check form-check-inline">
+                                          <input className="form-check-input" type="radio" name="addition_assignee" id="addition_no_emp" defaultValue="option1" defaultChecked />
+                                          <label className="form-check-label" htmlFor="addition_no_emp">
+                                            Yes, I'll be there
+                                          </label>
+                                        </div>
+                                        <div className="form-check form-check-inline">
+                                          <input className="form-check-input" type="radio" name="addition_assignee" id="addition_all_emp" defaultValue="option2" />
+                                          <label className="form-check-label" htmlFor="addition_all_emp">
+                                            No, I can't make it
+                                          </label>
+                                        </div>
+                                      
+                                      </td>
+                                      <td></td>
+                                      <td></td>                                            
+                                    </tr>
+                                    <tr>                                            
+                                      <td><lable>First Name</lable></td>
+                                      <td>
+                                        <div className="status-toggle">
+                                          <input type="checkbox" id="events_module" className="check" defaultChecked/>
+                                          <label htmlFor="events_module" className="checktoggle">checkbox</label>
+                                        </div>
+                                      </td>    
+                                      <td className="d-grid"><a href="#" data-bs-toggle="modal" data-bs-target="#delete_bf_field" className="delete-icon float-start text-center"><i className="fa fa-trash-o" /></a></td>
+                                    </tr>                                                                             
+                                    
+                                  </tbody>                                        
+                                </table> 
                                 </div>
                               </div>
                               </section>                              
-
+                              <a href="#" className="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_question"><i className="fa fa-plus" />Add Form Element</a><br/>
                               <div className="submit-section">                
                                 <button className="btn btn-custom-theme submit-btn min-w-btn-145" type="submit">PREVIEW</button>                                
                               </div>
 
                             </div>                            
+                            
                           </div>
                         </div>
                       </div>
@@ -534,9 +537,8 @@ const RSVPForm = () => {
                                     <div className="col-sm-12 col-md-4">
                                       <div className="form-group">
                                         <label> 1) RSVP is</label>
-                                          <select className="select">                  
-                                            <option value="Yes">Yes</option>
-                                            <option value="No">No</option>
+                                          <select className="select" disabled>                  
+                                            <option value="Yes">Yes</option>                                            
                                           </select>
                                       </div>
                                     </div>
@@ -544,7 +546,7 @@ const RSVPForm = () => {
                                     <div className="col-sm-12 col-md-4">
                                       <div className="form-group">
                                         <label> 2) Allow the primary attendee to name the plus-ones is</label>
-                                          <select className="select">                  
+                                          <select className="select" disabled>                  
                                             <option value="Yes">Yes</option>
                                             <option value="No">No</option>
                                             <option value="Yes/No">Yes/No</option>                                                
@@ -555,7 +557,7 @@ const RSVPForm = () => {
                                     <div className="col-sm-12 col-md-4">
                                       <div className="form-group">
                                         <label> 3) Event is</label>
-                                          <select className="select">                  
+                                          <select className="select" disabled>                  
                                             <option value="Paid">Paid</option>
                                             <option value="Free">Free</option>
                                             <option value="Paid/Free">Paid/Free</option>                  
@@ -563,6 +565,66 @@ const RSVPForm = () => {
                                       </div>
                                     </div>
 
+                                    <div className="col-sm-12 col-md-12">
+                                      <div className="form-group">
+                                        <label>Subject</label>
+                                          <input type="text" className="form-control" />
+                                      </div>
+                                    </div>
+                                    
+                                    <div className="col-sm-12 col-md-12">
+                                      <div className="form-group">                                            
+                                        <ReactQuill modules={modules}/>
+                                      </div>
+                                    </div>
+                                                                          
+                                  </div>
+
+
+                                  <div className="row">
+                                    <div className="col-sm-12 col-md-12">
+                                      <div className="form-group">
+                                        <label>Response Message when - </label>                                            
+                                      </div>
+                                    </div>
+
+                                    <div className="col-sm-12 col-md-4">
+                                      <div className="form-group">
+                                        <label> 1) RSVP is</label>
+                                          <select className="select" disabled>                                                              
+                                            <option value="No">No</option>
+                                          </select>
+                                      </div>
+                                    </div>
+
+                                    <div className="col-sm-12 col-md-4">
+                                      <div className="form-group">
+                                        <label> 2) Allow the primary attendee to name the plus-ones is</label>
+                                          <select className="select" disabled>                  
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                            <option value="Yes/No">Yes/No</option>                                                
+                                          </select>
+                                      </div>
+                                    </div>
+
+                                    <div className="col-sm-12 col-md-4">
+                                      <div className="form-group">
+                                        <label> 3) Event is</label>
+                                          <select className="select" disabled>                  
+                                            <option value="Paid">Paid</option>
+                                            <option value="Free">Free</option>
+                                            <option value="Paid/Free">Paid/Free</option>                  
+                                          </select>
+                                      </div>
+                                    </div>
+
+                                    <div className="col-sm-12 col-md-12">
+                                      <div className="form-group">
+                                        <label>Subject</label>
+                                          <input type="text" className="form-control" />
+                                      </div>
+                                    </div>
                                     
                                     <div className="col-sm-12 col-md-12">
                                       <div className="form-group">                                            
@@ -580,7 +642,108 @@ const RSVPForm = () => {
                                 </div>
                                 <div className="tab-pane" id="Reminders-tab">
 
-                                    Tab 2 Content                                          
+
+                                <div className="row">
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group">
+                                      <label>1) 1st Reminder email for providing the names of the attendees  </label>                                            
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group">
+                                      <label>Subject</label>
+                                      <input type="text" className="form-control" />
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group">                                            
+                                      <label>Body</label>
+                                      <ReactQuill modules={modules}/>
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group">                                        
+                                      <a href="#" className="btn add-btn" data-bs-toggle="modal" data-bs-target="#schedule_reminder_modal">Schedule Send</a>
+                                    </div>
+                                  </div>                                                                          
+                                </div>
+
+                                <div className="row">
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group">
+                                      <label>2) 2nd Reminder email for providing the names of the attendees  </label>                                            
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group">
+                                      <label>Subject</label>
+                                      <input type="text" className="form-control" />
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group">                                            
+                                      <label>Body</label>
+                                      <ReactQuill modules={modules}/>
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group">                                        
+                                      <a href="#" className="btn add-btn" data-bs-toggle="modal" data-bs-target="#schedule_reminder_modal">Schedule Send</a>
+                                    </div>
+                                  </div>                                                                          
+                                </div>
+
+                                <div className="row">
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group">
+                                      <label>3) Registration closed email</label>                                            
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group">
+                                      <label>Subject</label>
+                                      <input type="text" className="form-control" />
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group">                                            
+                                      <label>Body</label>
+                                      <ReactQuill modules={modules}/>
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group">                                        
+                                      <a href="#" className="btn add-btn" data-bs-toggle="modal" data-bs-target="#schedule_reminder_modal">Schedule Send</a>
+                                    </div>
+                                  </div>                                                                          
+                                </div>
+
+                                <div className="row">
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group">
+                                      <label>4) Reminder Email prior to the event</label>                                            
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group">
+                                      <label>Subject</label>
+                                      <input type="text" className="form-control" />
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group">                                            
+                                      <label>Body</label>
+                                      <ReactQuill modules={modules}/>
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group">                                        
+                                      <a href="#" className="btn add-btn" data-bs-toggle="modal" data-bs-target="#schedule_reminder_modal">Schedule Send</a>
+                                    </div>
+                                  </div>                                                                          
+                                </div>
+
+                                    
 
                                 </div>                            
                                 
@@ -606,7 +769,7 @@ const RSVPForm = () => {
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="headingOne">
                           <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            Basic Form - Prieview
+                            RSVP Form - Prieview
                           </button>
                         </h2>
                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
@@ -695,7 +858,7 @@ const RSVPForm = () => {
                                 <div className="col-sm-12 col-md-12"> 
                                   <div className="card">
                                       <div className="card-header">
-                                        <h4 className="card-title mb-0">CHOOSE EVENTS YOU WILL PARTICIPANTS</h4>
+                                        <h4 className="card-title mb-0">CHOOSE EVENTS YOU WILL PARTICIPATE</h4>
                                       </div>
                                       <div className="col-sm-12 col-md-12 mt-2"> 
                                         <div className="card-body">
@@ -777,92 +940,7 @@ const RSVPForm = () => {
 
                           </div>
                         </div>
-                      </div>
-                      <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingTwo">
-                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            Custom Form - Questions Prieview
-                          </button>
-                        </h2>
-                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                          <div class="accordion-body">
-                            
-                          <div className="row">
-
-                              <div className="card">
-                                <div className="card-body"> 
-                                  <div className="col-sm-12 col-md-12">
-                                    <div className="form-group text-center">                               
-                                      <h2 className="h2-horizontal-line"><span>RSVP</span></h2>
-                                    </div>
-                                  </div>
-
-                                  <div className="col-sm-12 col-md-12">
-                                    <div className="form-group text-center">                               
-                                      <h3>Event A</h3>
-                                    </div>
-                                  </div>
-
-                                  <div className="col-sm-12 col-md-12">
-                                    <div className="form-group text-center">                               
-                                      <h4>March 04, 2022</h4>
-                                    </div>
-                                  </div>      
-
-                                <div className="card-body">                                   
-                                      
-                                  <div className="col-sm-12 col-md-12">
-                                    <div className="form-group">                                
-                                      <label><strong>Will you able to make it?</strong></label><br/>
-                                      <div className="form-check form-check-inline">
-                                        <input defaultChecked className="form-check-input" type="radio" name="status" id="active1" defaultValue="Active" />
-                                        <label className="form-check-label" htmlFor="active1">Yeah!</label>
-                                      </div><br/>
-                                      <div className="form-check form-check-inline">
-                                        <input className="form-check-input" type="radio" name="status" id="inactive2" defaultValue="Inactive" />
-                                        <label className="form-check-label" htmlFor="inactive2">Maybe/Not sure</label>
-                                      </div><br/>
-                                      <div className="form-check form-check-inline">
-                                        <input className="form-check-input" type="radio" name="status" id="inactive3" defaultValue="Inactive" />
-                                        <label className="form-check-label" htmlFor="inactive3">I can't</label>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div className="col-sm-12 col-md-12">
-                                    <div className="form-group">                                
-                                      <label><strong>How many people are you going to bring?</strong></label><br/>
-                                      <select className="select">                  
-                                        <option>Just me!</option>                                        
-                                      </select>
-                                    </div>
-                                  </div> 
-
-                                  <div className="col-sm-12 col-md-12">
-                                    <div className="form-group">                                
-                                      <label><strong>Comments or Questions</strong></label><br/>
-                                      <textarea className="form-control" style={{height:'100px'}}></textarea>
-                                    </div>
-                                  </div> 
-                                                                
-                                </div>
-
-
-                              </div>      
-                              
-
-                              <div className="col-sm-12 col-md-12 mt-2">
-                                <div className="form-group text-center">
-                                  <button className="btn btn-custom-theme submit-btn min-w-btn-145" type="submit">Submit</button>
-                                </div>
-                              </div> 
-
-                            </div>              
-                            </div>
-
-                          </div>
-                        </div>
-                      </div>
+                      </div>                      
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="headingThree">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
@@ -1143,7 +1221,63 @@ const RSVPForm = () => {
             </div>
           </div>
        </div>      
-      {/* /Add Question Modal */}  
+      {/* /Add Question Modal */}
+
+      {/* Add Schedule Reminder Modal */}       
+       <div id="schedule_reminder_modal" className="modal custom-modal fade" role="dialog">
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Select Date & Time</h5>
+                <button type="button" className="close" data-bs-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <form>
+                <div className="row">
+                  <div className="col-sm-12 col-md-6">
+                    <div className="form-group">
+                      <label>Select Date</label>
+                      <input className="form-control" type="date" />                    
+                    </div>
+                  </div>
+                  <div className="col-sm-12 col-md-6">
+                    <div className="form-group">
+                      <label>Select Time</label>
+                      <input className="form-control" type="time" />                    
+                    </div>
+                  </div>
+                  <div className="col-sm-12 col-md-12">
+                    <div className="form-group">
+                      <label>Select Country</label>
+                        <select className="select">
+                          <option>Select Country</option>
+                          <option value="checkbox">India</option>                          
+                          <option value="textbox">United State</option>
+                          <option value="textarea">Canada</option>
+                        </select> 
+                    </div>
+                  </div>
+                  <div className="col-sm-12 col-md-12">
+                    <div className="form-group">
+                      <label>Select Timezone</label>
+                        <select className="select">
+                          <option>Select Timezone</option>                                                    
+                        </select> 
+                    </div>
+                  </div>                  
+                </div>                          
+                  <div className="submit-section text-end">
+                    <button  type="button" data-bs-dismiss="modal" aria-label="Close" className="min-w-btn-145 btn submit-btn">Cancel</button>
+                    <button className="btn btn-primary ms-2 submit-btn" type="button">Schedule Send</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+       </div>      
+      {/* /Add Schedule Reminder Modal */}  
 
       {/* Delete Basic form field Modal */}
         <div className="modal custom-modal fade" id="delete_bf_field" role="dialog">

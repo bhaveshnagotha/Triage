@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useState,useEffect } from 'react';
+import React, {useState,useEffect,useRef } from 'react';
 import { Link } from 'react-router-dom';
 import $ from 'jquery';
 import placeholders from './../../assets/img/profiles/avatar-01.jpg';
@@ -13,34 +13,191 @@ import "../../Components/Common/antdstyle.css"
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import MasterService from "../../Services/master.service";
+import { Toast } from 'primereact/toast';
 import * as yup from 'yup';
 
+import moment from 'moment';
+
+
 let schema = yup.object().shape({
-  user_role_name: yup.string().required("Please enter user role name").max(35),
-  for_company: yup.string().required("Please enter for company").max(35)  
+  rolename: yup.string().required("Please enter user role name").max(35),
+  companyid: yup.string().required("Please enter for company").max(35)  
 });
 
 
 const UserRoles = () => {
 
-  const { register, handleSubmit, formState: { errors }} = useForm(
+
+  const [activeCompanyList, setActiveCompanyList] = useState([]);
+
+  const [data, setData] = useState([]);
+
+  const [editid, setEditId] = useState(null);
+  const [isAddMode, setIsAddMode] = useState(true);
+
+  const closeModalRefDelUserRole= useRef(null);
+  const closeModalRefAddUserRole= useRef(null);
+  const toastMsg = useRef(null);
+
+
+
+  const displaySuccess = (msg) => {
+      toastMsg.current.show({severity: 'success', summary: 'Success', detail: msg});   
+  }
+  const displayError = (msg) => {
+      toastMsg.current.show({severity: 'error', summary: 'Error', detail: msg});   
+  }
+
+
+  const { register, handleSubmit,reset,setValue, formState: { errors }} = useForm(
     {
       resolver:yupResolver(schema),
     }
   );
 
-  const onSubmitClick = (data) => {    
-    console.log(data);
+const onSubmitForm = (data) => {
+    data["createdby"] = "Bhavesh";    
+    data["updatedby"] = "Bhavesh";  
+    if(isAddMode){
+      data["id"] = ""      
+      createUserRole(data)
+    }else{      
+      updateUserRole(data)
+    }
   } 
-  console.log(errors);
+  //console.log(errors);
+  const  createUserRoleFrm = () => {
+    setIsAddMode(true);
+    reset();
+} 
 
-  
-  const [data, setData] = useState([
-    {id:1,role_name:"Superadmin",company_name:"Ascent Infosolutions",created_by:"john doe",created_date:"23 Feb 2022",status:"Active"},
-    {id:2,role_name:"Admin",company_name:"Tbz Technologies",created_by:"john doe",created_date:"23 Feb 2022",role:"Admin",status:"Inactive"},
-    {id:3,role_name:"Staff",company_name:"Ascent Infosolutions",created_by:"john doe",created_date:"23 Feb 2022",status:"Active"},
+// Delete record
+const handleDeleteUserRole = () => {    
     
-  ]);
+  MasterService.deleteUserRole(editid).then((res)=>{
+    if(res.status === 200){          
+      getAllUserRoles()
+      displaySuccess(res.data.message)
+      closeModalRefDelUserRole.current.click();
+    }
+  }
+  ).catch(error => {
+    displayError(error)
+    closeModalRefDelUserRole.current.click();
+  });
+}
+
+  // Get Active Companies
+  const getActiveCompanies = ()=>{
+
+    
+    MasterService.getActiveCompanies().then((res)=>{
+      if(res.status === 200){          
+        console.log(res.data.result)
+        setActiveCompanyList(res.data.result)
+      }
+    }
+  ).catch(error => {
+    console.log(error)
+  });
+}  
+
+
+  // Get All Record
+  const getAllUserRoles = ()=>{
+    MasterService.getUserRoleList().then((res)=>{
+      if(res.status === 200){          
+        //console.log(res.data.result)
+        setData(res.data.result)
+      }
+    }
+  ).catch(error => {
+    displayError(error)
+  });
+}
+
+  // Insert Record
+  const createUserRole = (data) => {
+
+  MasterService.createUserRole(data).then(
+    (response) => {
+        if(response.status === 200) {
+            reset()
+            displaySuccess(response.data.message)
+            closeModalRefAddUserRole.current.click();
+            getAllUserRoles()
+            
+        }else{
+            displayError(response.data.message)
+        }      
+      
+    },
+    (error) => {
+      const resMessage =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+        displayError(resMessage)
+        //console.log(resMessage)      
+    }
+);
+
+}
+
+// Edit Record
+  const editUserRole = (id) => {
+
+    reset();      
+    setIsAddMode(false);
+    MasterService.editUserRole(id).then(
+      (response) => {            
+          //console.log(response.data.result.rows[0])    
+          const fields = ['rolename','companyid', 'status', 'id'];
+          fields.forEach(field => {
+            //console.log(response.data.result.rows[0][field])
+            setValue(field, response.data.result[field])                          
+          });            
+      },
+      (error) => {         
+        //console.log(error)        
+      }
+  );
+  }
+
+  // Update Record
+  const updateUserRole = (data) => {
+
+    MasterService.updateUserRole(data).then(
+      (response) => {        
+          if(response.status === 200) {
+              reset()
+              displaySuccess(response.data.message)
+              closeModalRefAddUserRole.current.click();
+              getAllUserRoles()
+              
+          }else{
+              displayError(response.data.message)
+          }
+          
+        
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+          displayError(resMessage)
+          //console.log(resMessage)      
+      }
+  );
+  
+  }
+
   useEffect( ()=>{
     if($('.select').length > 0) {
       $('.select').select2({
@@ -48,39 +205,41 @@ const UserRoles = () => {
         width: '100%'
       });
     }
-  });  
+    getActiveCompanies()
+    getAllUserRoles()
+  },[]);  
 
-    const columns = [
+    const columns = [     
       
       {
-        title: 'Role ID',
-        dataIndex: 'id',        
-        sorter: (a, b) => a.id.length - b.id.length,
-      },
-      {
         title: 'Role Name',
-        dataIndex: 'role_name',
+        dataIndex: 'rolename',
         render: (text, record) => (            
             <h2 className="table-avatar">              
               <Link to="/user-roles">{text}</Link>
             </h2>
           ), 
-          sorter: (a, b) => a.role_name.length - b.role_name.length,
+          sorter: (a, b) => a.rolename.length - b.rolename.length,
       },
       {
         title: 'For Company',
-        dataIndex: 'company_name',
-        sorter: (a, b) => a.company_name.length - b.company_name.length,
+        dataIndex: 'companyid',
+        sorter: (a, b) => a.companyid.length - b.companyid.length,
       },      
       {
         title: 'Created By',
-        dataIndex: 'created_by',
-        sorter: (a, b) => a.created_by.length - b.created_by.length,
+        dataIndex: 'createdby',
+        sorter: (a, b) => a.createdby.length - b.createdby.length,
       },    
       {
         title: 'Created On',
-        dataIndex: 'created_date',
-        sorter: (a, b) => a.created_date.length - b.created_date.length,
+        dataIndex: 'createddate',
+        sorter: (a, b) => a.createddate.length - b.createddate.length,
+        render: (createddate) => { 
+          return (<p>                  
+            {moment(createddate).format('DD-MM-YYYY')}
+          </p>)
+        },
       },
       {
         title: 'Status',
@@ -88,8 +247,8 @@ const UserRoles = () => {
         render: (text, record) => (
           <div className="action-label text-center">
           <a className="btn btn-white btn-sm btn-rounded" href="#">
-            <i className={text === "Active" ? "fa fa-dot-circle-o text-success" 
-          :"fa fa-dot-circle-o text-danger" } /> {text}
+            <i className={text === true ? "fa fa-dot-circle-o text-success" 
+          :"fa fa-dot-circle-o text-danger" } /> {text === true ? "Active" : "Inactive"}
           </a>
         </div>
           ),
@@ -101,8 +260,8 @@ const UserRoles = () => {
             <div className="dropdown dropdown-action text-end">
               <a href="#" className="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
               <div className="dropdown-menu dropdown-menu-right">
-                <a className="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#add_user"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                <a className="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_user"><i className="fa fa-trash-o m-r-5" /> Delete</a>
+                <a className="dropdown-item" href="#" onClick={() =>editUserRole(record.id)} data-bs-toggle="modal" data-bs-target="#add_user"><i className="fa fa-pencil m-r-5" /> Edit</a>
+                <a className="dropdown-item" href="#" onClick={() =>setEditId(record.id)} data-bs-toggle="modal" data-bs-target="#delete_user"><i className="fa fa-trash-o m-r-5" /> Delete</a>
               </div>
             </div>
           ),
@@ -114,8 +273,8 @@ const UserRoles = () => {
     
     <>
 
-      <div className="page-wrapper">           
-        
+      <div className="page-wrapper">   
+       <Toast ref={toastMsg} />
 
         {/* Page Content */}
         <div className="content container-fluid">
@@ -130,7 +289,7 @@ const UserRoles = () => {
                 </ul>
               </div>
               <div className="col-auto float-end ml-auto">
-                <a href="#" className="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_user"><i className="fa fa-plus" /> Add User Role</a>
+                <a href="#" onClick={()=>createUserRoleFrm()} className="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_user"><i className="fa fa-plus" /> Add User Role</a>
               </div>
             </div>
           </div>
@@ -146,9 +305,8 @@ const UserRoles = () => {
             <div className="col-sm-6 col-md-3"> 
               <div className="form-group form-focus select-focus">
                 <select className="select floating"> 
-                  <option>Select For Company</option>
-                  <option>Ascent Infosolutions</option>
-                  <option>Tbz Technologies</option>
+                  <option value="">Select For Company</option>
+                  {activeCompanyList.map(({ id, company_name }, index) => <option value={id}>{company_name}</option>)}                  
                 </select>
                 <label className="focus-label">For Company</label>
               </div>
@@ -156,9 +314,9 @@ const UserRoles = () => {
             <div className="col-sm-6 col-md-3"> 
               <div className="form-group form-focus select-focus">
                 <select className="select floating"> 
-                  <option>Select Status</option>
-                  <option>Active</option>
-                  <option>Inactive</option>                  
+                  <option value="">Select Status</option>
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>                  
                 </select>
                 <label className="focus-label">Status</label>
               </div>
@@ -192,29 +350,34 @@ const UserRoles = () => {
           <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Add User Role</h5>
-                <button type="button" className="close" data-bs-dismiss="modal" aria-label="Close">
+                <h5 className="modal-title">{isAddMode ===true ? 'Add' : 'Edit'} User Role</h5>
+                <button type="button" className="close" ref={closeModalRefAddUserRole} data-bs-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">×</span>
                 </button>
               </div>
               <div className="modal-body">
-                <form onSubmit={handleSubmit(onSubmitClick)}>
+                <form onSubmit={handleSubmit(onSubmitForm)}>
                   <div className="row">
                     <div className="col-sm-5">
                       <div className="form-group">
                         <label>User Role Name <span className="text-danger">*</span></label>
-                        <input className={errors.user_role_name ? 'form-control is-invalid': 'form-control'} type="text" name="user_role_name" {...register("user_role_name")}/>
-                        {errors.user_role_name && <div className="invalid-feedback">
-                          {errors.user_role_name?.message}
+                        <input className={errors.rolename ? 'form-control is-invalid': 'form-control'} type="text" name="rolename" {...register("rolename")}/>
+                        {errors.rolename && <div className="invalid-feedback">
+                          {errors.rolename?.message}
                         </div>}
                       </div>
                     </div>                    
                     <div className="col-sm-5">
                       <div className="form-group">
                         <label>For Company <span className="text-danger">*</span></label>
-                        <input className={errors.for_company ? 'form-control is-invalid': 'form-control'} type="text" name="for_company" {...register("for_company")} />
-                        {errors.for_company && <div className="invalid-feedback">
-                          {errors.for_company?.message}
+                        {/* select floating  */}
+                        <select className={errors.companyid ? 'form-select is-invalid': 'form-select'} {...register("companyid")}> 
+                          <option value="">Select For Company</option>
+                          {activeCompanyList.map(({ id, company_name }, index) => <option value={id}>{company_name}</option>)}                  
+                        </select>
+                        
+                        {errors.companyid && <div className="invalid-feedback">
+                          {errors.companyid?.message}
                         </div>}
                       </div>
                     </div>                                                            
@@ -222,7 +385,7 @@ const UserRoles = () => {
                       <div className="form-group">                        
                         <label>Status</label>                        
                         <div className="status-toggle">
-                          <input type="checkbox" id="status" className="check" defaultChecked/>
+                          <input type="checkbox" id="status" className="check" defaultChecked {...register("status")}/>
                           <label htmlFor="status" className="checktoggle">checkbox</label>
                         </div>
                       </div>
@@ -329,7 +492,7 @@ const UserRoles = () => {
                     </table>
                   </div>
                   <div className="submit-section">
-                    <button className="btn btn-primary submit-btn" type="submit">Submit</button>
+                    <button className="btn btn-primary submit-btn" type="submit">SUBMIT</button>
                   </div>
                 </form>
               </div>
@@ -343,16 +506,16 @@ const UserRoles = () => {
             <div className="modal-content">
               <div className="modal-body">
                 <div className="form-header">
-                  <h3>Delete User</h3>
+                  <h3>Delete User Role</h3>
                   <p>Are you sure want to delete?</p>
                 </div>
                 <div className="modal-btn delete-action">
                   <div className="row">
                     <div className="col-6">
-                      <a href="" className="btn btn-primary continue-btn">Delete</a>
+                      <a onClick={()=>handleDeleteUserRole()} className="btn btn-primary continue-btn">Delete</a>
                     </div>
                     <div className="col-6">
-                      <a href="" data-bs-dismiss="modal" className="btn btn-primary cancel-btn">Cancel</a>
+                      <a ref={closeModalRefDelUserRole}  data-bs-dismiss="modal" className="btn btn-primary cancel-btn">Cancel</a>
                     </div>
                   </div>
                 </div>

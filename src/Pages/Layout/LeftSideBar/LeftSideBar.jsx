@@ -21,10 +21,8 @@ const LeftSideBar = () => {
               <li className="submenu">
                 <a href="#"><i className="la la-bookmark-o" /> <span> Events</span> <span className="menu-arrow" /></a>
                 <ul style={{display: 'none'}}>
-                  <li><Link className={pathname.includes('/add-event') ?"active" :""} to="/add-event">New</Link></li>                  
-                  <li><Link className={pathname.includes('/events') ?"active" :""} to="/events">Online</Link></li>
-                  <li><Link to="/events">Offline</Link></li>
-                  <li><Link to = "/events">Hybrid</Link></li>                  
+                  <li><Link className={pathname.includes('/add-event') ?"active" :""} to="/add-event">Create Event</Link></li>                  
+                  <li><Link className={pathname.includes('/events') ?"active" :""} to="/events">Event List</Link></li>                  
                 </ul>
               </li>
 
@@ -49,11 +47,22 @@ const LeftSideBar = () => {
               <li className="submenu">
                 <a href="#"><i className="la la-user-plus" /> <span> Users</span> <span className="menu-arrow" /></a>
                 <ul style={{display: 'none'}}>
-                  <li><Link className={pathname.includes('/user-list') ?"active" :""} to="/user-list">User List</Link></li>                  
+                  <li><Link className={pathname.includes('/user-list') ?"active" :""} to="/user-list">User List</Link></li>
+                </ul>
+              </li>
+            
+              <li className="submenu">
+                <a href="#"><i className="la la-files-o" /> <span> Masters</span> <span className="menu-arrow" /></a>
+                <ul style={{display: 'none'}}>
+                  <li><Link className={pathname.includes('/company-list') ?"active" :""} to="/company-list">Company</Link></li>                  
                   <li><Link className={pathname.includes('/user-roles') ?"active" :""} to="/user-roles">User Roles</Link></li>
+                  <li><Link className={pathname.includes('/user-type') ?"active" :""} to="/user-type">User Types</Link></li>
+                  
+                  <li><Link className={pathname.includes('/event-type') ?"active" :""} to="/event-type">Event Types</Link></li>
                                     
                 </ul>
               </li>
+              
               
             </ul>
           </div>

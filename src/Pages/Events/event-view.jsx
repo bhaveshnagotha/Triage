@@ -1,20 +1,29 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, {useEffect,useState } from 'react';
+import { Link,useParams  } from 'react-router-dom';
 import $ from 'jquery';
 import placeholders from './../../assets/img/placeholder.jpg';
+import EventService from "../../Services/event.service";
 
 const EventView = () => {
-  
-    useEffect( ()=>{
-        let firstload = localStorage.getItem("firstload")
-        if(firstload === "true"){
-            setTimeout(function() {
-              window.location.reload(1)
-              localStorage.removeItem("firstload")
-            },1000)
+    const params = useParams();
+    const [data, setData] = useState([]);
+
+    const getEventDetail = (id)=>{      
+        EventService.getEventDetail(id).then((res)=>{
+          if(res.status === 200){          
+            console.log(res.data.result)
+            setData(res.data.result)
+          }
         }
-     });     
+      ).catch(error => {
+        console.log(error)
+      });
+    }
+    
+    useEffect( ()=>{              
+        getEventDetail(params.id)
+    },[]);     
 
      $(document).ready(function(){  
       $('.select').select2({        
@@ -35,7 +44,7 @@ const EventView = () => {
         <div className="page-header">
           <div className="row align-items-center">
             <div className="col">
-              <h3 className="page-title">Event Name</h3>
+              <h3 className="page-title">{data.p_event_title}</h3>
               <ul className="breadcrumb">
                 <li className="breadcrumb-item"><Link to="/events">Events</Link></li>
                 <li className="breadcrumb-item active">Event Details</li>
@@ -49,10 +58,9 @@ const EventView = () => {
             <div className="card">
               <div className="card-body">
                 <div className="project-title">
-                  <h5 className="card-title">Event Name</h5>                  
+                  <h5 className="card-title">{data.p_event_title}</h5>                  
                 </div>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel elit neque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum sollicitudin libero vitae est consectetur, a molestie tortor consectetur. Aenean tincidunt interdum ipsum, id pellentesque diam suscipit ut. Vivamus massa mi, fermentum eget neque eget, imperdiet tristique lectus. Proin at purus ut sem pellentesque tempor sit amet ut lectus. Sed orci augue, placerat et pretium ac, hendrerit in felis. Integer scelerisque libero non metus commodo, et hendrerit diam aliquet. Proin tincidunt porttitor ligula, a tincidunt orci pellentesque nec. Ut ultricies maximus nulla id consequat. Fusce eu consequat mi, eu euismod ligula. Aliquam porttitor neque id massa porttitor, a pretium velit vehicula. Morbi volutpat tincidunt urna, vel ullamcorper ligula fermentum at. </p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel elit neque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum sollicitudin libero vitae est consectetur, a molestie tortor consectetur. Aenean tincidunt interdum ipsum, id pellentesque diam suscipit ut. Vivamus massa mi, fermentum eget neque eget, imperdiet tristique lectus. Proin at purus ut sem pellentesque tempor sit amet ut lectus. Sed orci augue, placerat et pretium ac, hendrerit in felis. Integer scelerisque libero non metus commodo, et hendrerit diam aliquet. Proin tincidunt porttitor ligula, a tincidunt orci pellentesque nec. Ut ultricies maximus nulla id consequat. Fusce eu consequat mi, eu euismod ligula. Aliquam porttitor neque id massa porttitor, a pretium velit vehicula. Morbi volutpat tincidunt urna, vel ullamcorper ligula fermentum at. </p>
+                <p>{data.p_event_description}</p>                
               </div>
             </div>
             <div className="card">
@@ -163,19 +171,15 @@ const EventView = () => {
                   <tbody>
                     <tr>
                         <td>Date:</td>
-                        <td className="text-end">21 February, 2022 </td>
+                        <td className="text-end">{data.p_event_start_date} </td>
                     </tr>
                     <tr>
                     <td>Location:</td>
-                      <td className="text-end">Ahmedabad</td>
-                    </tr>
-                    <tr>
-                      <td>Tickets:</td>
-                      <td className="text-end">Sold 40/100</td>
-                    </tr>                        
+                      <td className="text-end">{data.p_event_location}</td>
+                    </tr>                                            
                     <tr>
                       <td>Event Type:</td>
-                      <td className="text-end">FREE</td>
+                      <td className="text-end">{data.p_eventtypeid}</td>
                     </tr>
                   </tbody>
                 </table>

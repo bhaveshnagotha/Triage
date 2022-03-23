@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from "react";
+import React, {useState, useEffect} from "react";
 //import React, { useState,useEffect } from "react";
 //import { withRouter } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 //import { Helmet } from "react-helmet";
 import logo from './../../../assets/img/logo.png';
 import avatar21 from './../../../assets/img/profiles/avatar-21.jpg';
@@ -12,7 +12,42 @@ import avatar21 from './../../../assets/img/profiles/avatar-21.jpg';
 // import  lnSpanish from './../../../assets/img/flags/es.png';
 // import  lnGerman from './../../../assets/img/flags/de.png';
 
-const Header = () => {    
+import AuthService from "../../../Services/auth.service";
+
+const Header = () => {   
+  
+  const navigate  = useNavigate();
+  const [userid,setUserId] = useState(null);
+  const [token,setToken] = useState(null);
+
+  
+  const getCurrentUserVal = ()=>{
+    var currentUserData = AuthService.getCurrentUser();    
+    
+    if(currentUserData){
+      if(currentUserData.usertypeid && currentUserData.id_session){
+        setUserId(currentUserData.usertypeid);
+        setToken(currentUserData.id_session)
+      }      
+    }
+    
+  }
+  
+  // console.log(token)
+  // if(userid == null && token == null){
+  //   navigate("/login");
+  // }
+
+  const logout = ()=>{
+    AuthService.logout()
+    navigate("/login");
+  }  
+  useEffect( ()=>{      
+    //console.log(userid)  
+    getCurrentUserVal()    
+  },[]);
+  //console.log(userid) 
+  
   return (
     <>
         <div className="header" style={{right:"0px"}}>
@@ -256,7 +291,7 @@ const Header = () => {
             </a>
             <div className="dropdown-menu">
               <Link className="dropdown-item" to="/profile">My Profile</Link>              
-              <Link className="dropdown-item" to="/login">Logout</Link>
+              { userid != null && token != null &&<Link onClick={logout} className="dropdown-item" to="/login">Logout</Link> }
             </div>
           </li>
         </ul>
@@ -267,7 +302,7 @@ const Header = () => {
           <div className="dropdown-menu dropdown-menu-right">
             <Link className="dropdown-item" to="/app/profile/employee-profile">My Profile</Link>
             <Link className="dropdown-item" to="/settings/companysetting">Settings</Link>
-            <Link className="dropdown-item" to="/login">Logout</Link>
+            { userid != null && token != null &&<Link onClick={logout} className="dropdown-item" to="/login">Logout</Link> }
           </div>
         </div>
         {/* /Mobile Menu */}

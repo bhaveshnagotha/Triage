@@ -16,8 +16,14 @@ import UserRoles from './Pages/Users/user-roles'
 import Profile from './Pages/Profile/profile'
 import RSVPForm from './Pages/RSVP/rsvp-form'
 import RSVPList from './Pages/RSVP/rsvp-list'
-
-
+import CompanyList from './Pages/Company/company-list'
+import Register from './Pages/Register/register'
+import Rsvp from './front/rsvp-form/rsvp'
+import Rsvp2 from './front/rsvp-form/rsvp-2'
+import Rsvp3 from './front/rsvp-form/rsvp-3'
+import EventType from './Pages/Masters/event-type'
+import UserType from './Pages/Masters/user-type'
+import EditEvent from './Pages/Events/edit-event'
 
 function App() {
     return ( 
@@ -28,8 +34,9 @@ function App() {
 
                 {/* Events */}
                 <Route path="/add-event" element={<AddEvent/>}/> 
+                <Route path="/edit-event/:id" element={<EditEvent/>}/> 
                 <Route path="/events" element={<EventList />}/>
-                <Route path="/event-view" element={<EventView/>}/>
+                <Route path="/event-view/:id" element={<EventView/>}/>
 
                 {/* RSVP Card */}
                 <Route path="/rsvp-form" element={<RSVPForm/>}/>
@@ -48,12 +55,27 @@ function App() {
                 <Route path="/user-list" element={<UserList/>}/>
                 <Route path="/user-roles" element={<UserRoles/>}/>
 
+                {/* Company */}
+                <Route path="/company-list" element={<CompanyList/>}/>
+
                 <Route path="/profile" element={<Profile/>}/>
+
+                {/* Masters */}
+
+                <Route path="/event-type" element={<EventType/>}/>
+                <Route path="/user-type" element={<UserType/>}/>
+                
                 
 
 
             </Route>
-            <Route path="/login" element={<Login/>} />            
+            <Route path="/login" element={<Login/>} />
+            <Route path="/register" element={<Register/>} />          
+
+            {/* Front RSVP Form */}  
+            <Route path="/rsvp" element={<Rsvp/>} />          
+            <Route path="/rsvp-2" element={<Rsvp2/>} />
+            <Route path="/rsvp-3" element={<Rsvp3/>} />
         </Routes>
     );
 }

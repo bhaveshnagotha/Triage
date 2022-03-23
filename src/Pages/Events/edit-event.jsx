@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useParams,useNavigate } from 'react-router-dom';
 //import ReactQuill from 'react-quill';
 import $ from 'jquery';
 
@@ -21,8 +21,10 @@ let schema = yup.object().shape({
   p_event_end_time: yup.string().required("Please enter end time")
 });
 
-const AddEvent = () => { 
+const EditEvent = () => { 
 
+  const navigate  = useNavigate();
+  const params = useParams();
   const [activeEventTypeList, setActiveEventTypeList] = useState([]);
 
   const {setValue, getValues, control, watch,register, handleSubmit,reset, formState: { errors }} = useForm(
@@ -30,11 +32,13 @@ const AddEvent = () => {
     resolver:yupResolver(schema),
   });  
 
-  const { fields:apfields, append:apappend, remove:apremove } = useFieldArray({ name: 'ap', control });
+  const { fields:apfields, append:apappend,prepend, remove:apremove } = useFieldArray({ name: 'ap', control });
   const { fields:childeventfields, append:childeventappend, remove:childeventremove } = useFieldArray({ name: 'child_event', control });
   
+  
   // Additional Participants Start
-  const addMoreAP = ()=>{ apappend()  }
+  
+  const addMoreAP = ()=>{ apappend() }
   const removeAPremove = (i)=>{ apremove(i) }
   // Additional Participants End
 
@@ -43,32 +47,117 @@ const AddEvent = () => {
   const removeChildEvent = (i)=>{ childeventremove(i) }
   // Add Child Event End
 
-  const toastMsg = useRef(null);
-  const displaySuccess = (msg) => {
-      toastMsg.current.show({severity: 'success', summary: 'Success', detail: msg});   
-  }
-  const displayError = (msg) => {
-      toastMsg.current.show({severity: 'error', summary: 'Error', detail: msg});   
-  }
+  
+  
 
     const onSubmitForm = (data) => {        
       data["createdby"] = "Bhavesh";    
       data["updatedby"] = "Bhavesh";          
-      console.log(data);
-      createEvent(data)
-    }     
+      //console.log(data);
+      updateEvent(data)
+    }    
+    
+    
+  // Edit Record
+  const editEvent = () => {
+    var editid = params.id;    
+
+    if(editid !== "" && editid > 0){
+
+      // Get Event Detail
+      EventService.editEvent(editid).then(
+          (response) => {            
+              //console.log(response.data.result)    
+              const fields = ['p_eventtypeid',
+                              'p_event_paid_free',
+                              'p_event_price_type',
+                              'p_event_mode',
+                              'p_event_single_multiple',
+                              'p_event_title',
+                              'p_event_start_date',
+                              'p_event_end_date',
+                              'p_event_start_time',
+                              'p_event_end_time',
+                              'p_event_description',
+                              'p_event_additional_info',
+                              'p_event_location',
+                              'p_event_floor_plan',
+                              'p_event_price',
+                              'id'];
+              fields.forEach(field => {
+                //console.log(response.data.result[field])
+                setValue(field, response.data.result[field])                          
+              });            
+          },
+          (error) => {         
+            console.log(error)        
+          }
+      );
+
+      // Get Event Child Details
+
+      EventService.editChildEvent(editid).then(
+        (response) => { 
+          if(response.data.result.length > 0){
+            
+            setEventLocationshow([{
+              singleEL: false,
+              multiEL: true,
+              multiESingleL: false,
+            }])
+
+            childeventappend(response.data.result);
+            // childeventappend(                                         
+            // response.data.result.forEach((dataVal, i) => {                
+            //     //console.log(dataVal)
+            //     setValue(`child_event.${i}.c_event_title`, dataVal.c_event_title)
+            //     setValue(`child_event.${i}.c_event_description`, dataVal.c_event_description)
+            //     setValue(`child_event.${i}.c_event_start_date`, dataVal.c_event_start_date)
+            //     setValue(`child_event.${i}.c_event_end_date`, dataVal.c_event_end_date)
+            //     setValue(`child_event.${i}.c_event_start_time`, dataVal.c_event_start_time)
+            //     setValue(`child_event.${i}.c_event_end_time`, dataVal.c_event_end_time)
+            //     setValue(`child_event.${i}.c_event_location`, dataVal.c_event_location)
+            //     setValue(`child_event.${i}.c_event_price`, dataVal.c_event_price)                
+                
+            //   })              
+            // )
+
+            
+          }
+          
+
+                       
+        },
+        (error) => {         
+          console.log(error)        
+        }
+    );
+
+      // Get Additional Participants
+      EventService.editAdditionalParticipates(editid).then(
+        (response) => { 
+          apappend(response.data.result);
+        },
+        (error) => {         
+          console.log(error)        
+        }
+    );
+
+    }
+    
+  }  
   
   // Insert Record
-  const createEvent = (data) => {
+  const updateEvent = (data) => {    
 
-    EventService.createEvent(data).then(
+    console.log(data);
+    EventService.updateEvent(data).then(
       (response) => {
           if(response.status === 200) {               
-              displaySuccess(response.data.message)
-              reset()           
-              addMoreAP()
+              //displaySuccess(response.data.message)
+              //navigate("/events");
           }else{
-              displayError(response.data.message)
+            console.log(response.data.message)
           }
           
       },
@@ -79,10 +168,62 @@ const AddEvent = () => {
             error.response.data.message) ||
           error.message ||
           error.toString();
-          displayError(resMessage)
+          console.log(resMessage)
           //console.log(resMessage)      
       }
   );
+
+  EventService.updateChildEvent(data).then(
+      (response) => {
+          if(response.status === 200) {               
+              //displaySuccess(response.data.message)
+              
+          }else{
+            console.log(response.data.message)
+          }
+          
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+          console.log(resMessage)
+          //console.log(resMessage)      
+      }
+  );
+
+  EventService.updateAdditonalParticipants(data).then(
+      (response) => {
+          if(response.status === 200) {               
+              //displaySuccess(response.data.message)
+              
+          }else{
+              console.log(response.data.message)
+          }
+          
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+          console.log(resMessage)
+          //console.log(resMessage)      
+      }
+  );
+
+
+  
+
+
+navigate("/events");
+
+
   
   }
 
@@ -156,34 +297,34 @@ const AddEvent = () => {
     }
   };       
 
-    useEffect( ()=>{
+    useEffect( ()=>{       
 
-        let firstload = localStorage.getItem("firstload")
-        if(firstload === "true"){          
-            setTimeout(function() {
-              window.location.reload(1)
-              localStorage.removeItem("firstload")
-            },1000)
-        }
-
-        if($('.select').length > 0) {
-          $('.select').select2({
-            minimumResultsForSearch: -1,
-            width: '100%'
-          });
-        }        
+        // if($('.select').length > 0) {
+        //   $('.select').select2({
+        //     minimumResultsForSearch: -1,
+        //     width: '100%'
+        //   });
+        // }        
 
         $("#eventLocationSelect").on("change", function () {         
           handleELChange($(this).val())
         });
 
         getActiveEventType()
-        addMoreAP()        
+        //addMoreAP()
+        //addMoreAPPrePend()
+
+        const timer = setTimeout(() => {
+          editEvent()
+        }, 200);
+        return () => clearTimeout(timer);
+                
+        
 
      },[]);
 
    // Get Active Companies
-   const getActiveEventType = ()=>{
+   const getActiveEventType = ()=>{     
     MasterService.getActiveEventType().then((res)=>{
       if(res.status === 200){          
         //console.log(res.data.result)
@@ -199,7 +340,7 @@ const AddEvent = () => {
     <div>
 
       <div className="page-wrapper">
-      <Toast ref={toastMsg} />       
+          
         {/* Page Content */}
         
 
@@ -210,10 +351,10 @@ const AddEvent = () => {
         <div className="page-header">
           <div className="row">
             <div className="col-sm-2">
-              <h3 className="page-title">New Event</h3>
+              <h3 className="page-title">Edit Event</h3>
               <ul className="breadcrumb">
                 <li className="breadcrumb-item"><Link to="/events">Events</Link></li>
-                <li className="breadcrumb-item active">New Event</li>
+                <li className="breadcrumb-item active">Edit Event</li>
               </ul>
             </div>
             <div className="col-sm-2">
@@ -420,7 +561,7 @@ const AddEvent = () => {
                     <div className="col-sm-1">
                       <div className="form-group">
                         <label>Start Time</label>
-                        <input className="form-control datetimepicker" type="time" 
+                        <input className="form-control" type="time" 
                         name="c_event_start_time"                            
                         {...register(`child_event.${i}.c_event_start_time`)}/>
                       </div>
@@ -429,7 +570,7 @@ const AddEvent = () => {
                     <div className="col-sm-1">
                       <div className="form-group">
                         <label>End Time</label>
-                        <input className="form-control datetimepicker" type="time" 
+                        <input className="form-control" type="time" 
                         name="c_event_end_time"                            
                         {...register(`child_event.${i}.c_event_end_time`)}/>
                       </div>
@@ -499,13 +640,14 @@ const AddEvent = () => {
 
                     {apfields.map((x, i) => { 
                   return (
-                    <div className="row row-sm" key={i}>                      
+                    
+                    <div className="row row-sm" key={i}>                                          
                       <div className="col-sm-4">
                         <div className="form-group">
                           <label>Host(Auto Complete)</label>
                           <input className="form-control" type="text"  
                           
-                          defaultValue={x.value}                          
+                          value={x.value}                          
                           name="ep_host_name"                                                        
                             {...register(`ap.${i}.ep_host_name`)} />
                         </div>
@@ -514,7 +656,7 @@ const AddEvent = () => {
                         <div className="form-group">
                           <label>Name</label>
                           <input className="form-control" type="text"  name="ep_name"                            
-                            defaultValue={x.value} 
+                            value={x.value} 
                             {...register(`ap.${i}.ep_name`)} />
                         </div>
                       </div>                        
@@ -547,7 +689,7 @@ const AddEvent = () => {
                 </div>
               </div>
               <div className="submit-section">                
-                <button className="btn btn-primary submit-btn" type="submit">SUBMIT</button>
+                <button className="btn btn-primary submit-btn" type="submit">SAVE</button>
               </div>
             
             </div>          
@@ -563,4 +705,4 @@ const AddEvent = () => {
   )
 }
 
-export default AddEvent
+export default EditEvent

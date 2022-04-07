@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
-//import ReactQuill from 'react-quill';
+import { Link,useNavigate } from 'react-router-dom';
+import ReactQuill from 'react-quill';
 import $ from 'jquery';
 
 import { useForm,useFieldArray } from 'react-hook-form';
@@ -9,6 +9,7 @@ import * as yup from 'yup';
 
 import MasterService from "../../Services/master.service";
 import EventService from "../../Services/event.service";
+import AuthService from "../../Services/auth.service";
 
 import { Toast } from 'primereact/toast';
 
@@ -23,7 +24,10 @@ let schema = yup.object().shape({
 
 const AddEvent = () => { 
 
+  const navigate  = useNavigate();
+
   const [activeEventTypeList, setActiveEventTypeList] = useState([]);
+  const [activeParticipantList, setActiveParticipantList] = useState([]);
 
   const {setValue, getValues, control, watch,register, handleSubmit,reset, formState: { errors }} = useForm(
   {
@@ -51,10 +55,11 @@ const AddEvent = () => {
       toastMsg.current.show({severity: 'error', summary: 'Error', detail: msg});   
   }
 
-    const onSubmitForm = (data) => {        
-      data["createdby"] = "Bhavesh";    
-      data["updatedby"] = "Bhavesh";          
-      console.log(data);
+    const onSubmitForm = (data) => {       
+      
+      var currentUserFullname = AuthService.getUserFullname();        
+      data["createdby"] = currentUserFullname;    
+      data["updatedby"] = currentUserFullname;                  
       createEvent(data)
     }     
   
@@ -67,6 +72,7 @@ const AddEvent = () => {
               displaySuccess(response.data.message)
               reset()           
               addMoreAP()
+              navigate("/events");
           }else{
               displayError(response.data.message)
           }
@@ -179,6 +185,7 @@ const AddEvent = () => {
 
         getActiveEventType()
         addMoreAP()        
+        getActiveParticipant()
 
      },[]);
 
@@ -195,6 +202,24 @@ const AddEvent = () => {
   });
 }
 
+// Get Active Participant
+const getActiveParticipant = ()=>{
+  MasterService.getActiveParticipant().then((res)=>{
+    if(res.status === 200){          
+      //console.log(res.data.result)
+      setActiveParticipantList(res.data.result)
+    }
+  }
+).catch(error => {
+  console.log(error)
+});
+}
+
+const onEventDescriptionChange = (state) => {  
+  console.log(state)
+  setValue("p_event_description", state);
+};
+
   return (
     <div>
 
@@ -209,7 +234,7 @@ const AddEvent = () => {
         <form onSubmit={handleSubmit(onSubmitForm)}>
         <div className="page-header">
           <div className="row">
-            <div className="col-sm-2">
+            <div className="col-sm-4">
               <h3 className="page-title">New Event</h3>
               <ul className="breadcrumb">
                 <li className="breadcrumb-item"><Link to="/events">Events</Link></li>
@@ -236,14 +261,14 @@ const AddEvent = () => {
               </div>
             </div>
 
-            <div className="col-sm-2">
+            {/* <div className="col-sm-2">
               <div className="form-group">                
                 <select className="form-select" {...register("p_event_price_type")}>                  
                   <option value="sprice">Single Price</option>
-                  <option value="dprice">Different Prices</option>                  
-                </select>
+                  {/* <option value="dprice">Different Prices</option>                   */}
+               {/* </select>
               </div>
-            </div>
+            </div> */}
 
             <div className="col-sm-2">
               <div className="form-group">                
@@ -327,8 +352,8 @@ const AddEvent = () => {
                   <div className="form-group">
                     <label>Event Description</label>                    
                     {/* <textarea className="form-control" rows="10"></textarea> */}
-                    {/* <ReactQuill modules={modules} {...register("p_event_description")}/> */}
-                    <textarea className="form-control" style={{height:'150px'}} {...register("p_event_description")}/>  
+                    <ReactQuill onChange={(e)=>onEventDescriptionChange(e)}/>
+                    {/* <textarea className="form-control" style={{height:'150px'}} {...register("p_event_description")}/>   */}
                   </div>
                 </div>
                
@@ -339,7 +364,7 @@ const AddEvent = () => {
                   </div>
                 </div>
 
-                <div className="col-sm-3 col-md-3">
+                {(eventLocationshow[0].singleEL ===true || eventLocationshow[0].multiESingleL === true) && <div className="col-sm-3 col-md-3">
                   <div className="form-group">
                     <label>Add Location</label>                   
                     <div className="input-group">
@@ -347,7 +372,7 @@ const AddEvent = () => {
                       <span className="input-group-append input-group-addon"><span className="input-group-text"><i className="fa fa-map-marker" /></span></span>
                     </div> 
                   </div>
-                </div>
+                </div>}
 
                 <div className="col-sm-3 col-md-3">
                   <div className="form-group">
@@ -356,7 +381,7 @@ const AddEvent = () => {
                   </div>
                 </div>
 
-                {(eventLocationshow[0].singleEL ===true || eventLocationshow[0].multiESingleL === true) && <div className="col-sm-3 col-md-3">
+                {(eventLocationshow[0].singleEL ===true) && <div className="col-sm-3 col-md-3">
                   <div className="form-group">
                     <label>Add Price</label>                    
                     <input type="text" className="form-control" placeholder='INR' {...register("p_event_price")}/>
@@ -455,13 +480,23 @@ const AddEvent = () => {
                       </div>
                     </div>
                     }
+                    {(eventLocationshow[0].multiEL ===true || eventLocationshow[0].multiESingleL === true) && <div className="col-sm-2">
+                      <div className="form-group">                 
+                      <label>&nbsp;</label>
+                        <div className="form-check mt-2">      
+                          <input className="form-check-input" ref={register(`child_event.${i}.paid_check_1`)} type="checkbox" id={`${i}`} {...register(`child_event.${i}.paid_check`)}/>
+                          <label className="form-check-label" htmlFor={`${i}`}>Paid?</label>
+                        </div>                        
+                      </div>                      
+                    </div>
+                    }
 
-                    {eventLocationshow[0].multiEL ===true && <div className="col-sm-2">
+                    {(eventLocationshow[0].multiEL ===true || eventLocationshow[0].multiESingleL === true) && <div className="col-sm-2">                      
                       <div className="form-group">
                         <label>Add Price</label>
-                        <input className="form-control" type="text" placeholder='INR'                            
+                        <input className="form-control" ref={register(`child_event.${i}.paid_check_1`)} type="text" placeholder='INR'                            
                         name="c_event_price"                            
-                        {...register(`child_event.${i}.c_event_price`)}/>
+                        {...register(`child_event.${i}.c_event_price`)} disabled={!watch(`child_event.${i}.paid_check`)}/>
                       </div>
                     </div>
                     }
@@ -494,7 +529,7 @@ const AddEvent = () => {
                   
                   <div className="settings-widget">
                     <div className="h3 card-title">                        
-                      <label>Additional Participates</label>
+                      <label>Additional Participants</label>
                     </div>
 
                     {apfields.map((x, i) => { 
@@ -502,12 +537,11 @@ const AddEvent = () => {
                     <div className="row row-sm" key={i}>                      
                       <div className="col-sm-4">
                         <div className="form-group">
-                          <label>Host(Auto Complete)</label>
-                          <input className="form-control" type="text"  
-                          
-                          defaultValue={x.value}                          
-                          name="ep_host_name"                                                        
-                            {...register(`ap.${i}.ep_host_name`)} />
+                          <label>Participant</label>
+                          <select className="form-select" {...register(`ap.${i}.ep_host_name`)}>                  
+                            <option value="">Select Participant</option>
+                            {activeParticipantList.map(({ id, name }, index) => <option value={name}>{name}</option>)}  
+                          </select>                          
                         </div>
                       </div>
                       <div className="col-sm-4">

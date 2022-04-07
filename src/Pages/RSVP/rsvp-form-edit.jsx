@@ -49,7 +49,7 @@ let schemaForCustomForm = yup.object().shape({
 });
 
 
-const RSVPForm = () => {  
+const RSVPEditForm = () => {  
 
   const navigate  = useNavigate();
   const location = useLocation();
@@ -69,13 +69,15 @@ const RSVPForm = () => {
   const [rsvpSettingsPreview, setRsvpSettingsPreview] = useState([]); 
 
   const [dEmailTemplatePreview, setDEmailTemplatePreview] = useState([]);
-  const [rEmailTemplatePreview, setREmailTemplatePreview] = useState([]);
+  const [rEmailTemplatePreview, setREmailTemplatePreview] = useState([]); 
+
+  
   
   const [eventDetailByID, setEventDetailByID] = useState([]); 
-  const [eventName, setEventName] = useState(null);
+  const [eventName, setEventName] = useState(null); 
 
-  const [formDesingTitleName, setFormDesingTitleName] = useState(null); 
-
+  const [formDesingTitleName, setFormDesingTitleName] = useState(null);  
+  
   const [visibleNextBtnStep1, setVisibleNextBtnStep1] = useState([]); 
   const [valueGenereatedLink, setValueGenereatedLink] = useState("");
 
@@ -83,6 +85,8 @@ const RSVPForm = () => {
   const [chooseParentEventParticipate, setChooseParentEventParticipate] = useState([]);
   const [chooseChildEventParticipate, setChooseChildEventParticipate] = useState([]);  
   // Step 4 End
+
+  
 
 
   const {setValue, getValues, watch:settingFormWatch,register:settingsRegister,handleSubmit:handleSettingsSubmitForm,reset, formState: { errors }} = useForm(
@@ -93,8 +97,7 @@ const RSVPForm = () => {
   const {control,setValue:customFormSetValue, watch:customFormWatch,register:customFormRegister,handleSubmit:handleCustomSubmitForm,reset:customFormReset,formState: { errors:errorsCustomForm }} = useForm(
     {
       resolver:yupResolver(schemaForCustomForm),
-    });   
-  
+    });
 
 
   const closeModalRefDelCForm= useRef(null);
@@ -108,20 +111,11 @@ const RSVPForm = () => {
       toastMsg.current.show({severity: 'error', summary: 'Error', detail: msg});   
   }
 
-  
-
-  const getCurretRsvpSettingsId = ()=>{
-    if(localStorage.getItem('currentRsvpSettings') != 'undefined' && localStorage.getItem('currentRsvpSettings') != null){
-      return JSON.parse(localStorage.getItem('currentRsvpSettings'));       
-    }else{
-      return 0
-    }
     
-  }
   var editid = params.id;
     
   
-  const currentSettingsId = getCurretRsvpSettingsId()
+  const currentSettingsId = editid
   //console.log(currentSettingsId);
 
   const onSubmitCustomForm = (data) => {       
@@ -129,7 +123,7 @@ const RSVPForm = () => {
     if(isAddMode){      
       if(currentSettingsId && currentSettingsId > 0 && currentSettingsId !="" && currentSettingsId !=null){
         data["rsvp_settings_id"] = currentSettingsId;   
-        data["rsvp_field_status"] = true;                 
+        data["rsvp_field_status"] = true;         
         createRsvpCustomForm(data)
       }
       
@@ -155,31 +149,27 @@ const RSVPForm = () => {
   //console.log(editRsvpSettings)
   
   const createRsvpSettings = (data) => {  
-    
-    if(data['rsvp_allow_individual_guests'] == "on"){
+    //console.log(data);
+
+    if(data['rsvp_allow_individual_guests'] == "on" || data['rsvp_allow_individual_guests'] === true){
       data['rsvp_individual'] = true
       data['rsvp_group'] = false
       data['rsvp_group_set_guest_limit'] = ""
       data['rsvp_group_allow_invitee_to_name'] = ""
     }
 
-    if(data['rsvp_allow_group_guests'] == "on"){
+    if(data['rsvp_allow_group_guests'] == "on" || data['rsvp_allow_group_guests'] === true){
       data['rsvp_group'] = true
       data['rsvp_individual'] = false      
       data['rsvp_individual_set_guest_limit'] = ""
       data['rsvp_individual_allow_invitee_to_name'] = ""
     }
-    //console.log(data);
 
     RsvpService.createRsvpSettings(data).then(
       (response) => {
           if(response.status === 200 && response.data.success === 1) {              
               displaySuccess(response.data.message)                            
-              localStorage.setItem('currentRsvpSettings',JSON.stringify(response.data.data.id));              
-              //const getCurrentRsvpSettings =  JSON.parse(localStorage.getItem('currentRsvpSettings'));                                 
-              setTimeout(() => {  
-                $(".sw-btn-next").prop('disabled', false);    
-              },400)
+              //sessionStorage.setItem('currentRsvpSettings',JSON.stringify(response.data.data.id));                            
           }else{
               displayError(response.data.message)
           }
@@ -194,22 +184,22 @@ const RSVPForm = () => {
   }
 
   const updateRsvpSettings = (data) => {  
-    //console.log(data);
+    
 
-    if(data['rsvp_allow_individual_guests'] == "on"){
+    if(data['rsvp_allow_individual_guests'] == "on" || data['rsvp_allow_individual_guests'] === true){
       data['rsvp_individual'] = true
       data['rsvp_group'] = false
       data['rsvp_group_set_guest_limit'] = ""
       data['rsvp_group_allow_invitee_to_name'] = ""
     }
 
-    if(data['rsvp_allow_group_guests'] == "on"){
+    if(data['rsvp_allow_group_guests'] == "on" || data['rsvp_allow_group_guests'] === true){
       data['rsvp_group'] = true
       data['rsvp_individual'] = false      
       data['rsvp_individual_set_guest_limit'] = ""
       data['rsvp_individual_allow_invitee_to_name'] = ""
     }
-
+//console.log(data);
     RsvpService.updateRsvpSettings(data).then(
       (response) => {
           if(response.status === 200 && response.data.success === 1) {              
@@ -218,7 +208,7 @@ const RSVPForm = () => {
           }else{
               displayError(response.data.message)
           }
-          //console.log(response.status)
+          console.log(response.status)
         
       },
       (error) => {
@@ -237,9 +227,9 @@ const RSVPForm = () => {
           if(response.status === 200) {              
               handleCustomFormTab()
               displaySuccess(response.data.message)  
-              closeModalRefAddCForm.current.click();   
+              closeModalRefAddCForm.current.click();                 
               customFormSetValue("c_rsvp_field_name", '')
-              customFormSetValue("c_rsvp_field_type", '')                       
+              customFormSetValue("c_rsvp_field_type", '')
           }else{
               displayError(response.data.message)
           }
@@ -327,27 +317,27 @@ const RSVPForm = () => {
     
     
     getRsvpSettingsById(currentSettingsId)
-    const getCurrentSettingVal = JSON.parse(localStorage.getItem('currentSettingsval'))           
-    //console.log(getCurrentSettingVal)
-    if(getCurrentSettingVal != null){
+    // const getCurrentSettingVal = JSON.parse(sessionStorage.getItem('currentSettingsval'))           
+    // console.log(getCurrentSettingVal)
+    // if(getCurrentSettingVal != null){
 
-      if(getCurrentSettingVal.rsvp_event_mode){
-        getAllEvents(getCurrentSettingVal.rsvp_event_mode)
-      }
+    //   if(getCurrentSettingVal.rsvp_event_mode){
+    //     getAllEvents(getCurrentSettingVal.rsvp_event_mode)
+    //   }
   
-      const fields = ['rsvp_event_mode','rsvp_event_id','rsvp_by_date','rsvp_by_time',
-        'rsvp_event_capacity','rsvp_individual','rsvp_individual_set_guest_limit',
-        'rsvp_individual_allow_invitee_to_name','rsvp_group','rsvp_group_set_guest_limit',
-        'rsvp_group_allow_invitee_to_name','id'];
-        const timer = setTimeout(() => {            
-            fields.forEach(field => {
-            //console.log(currentSettings[field])
-            setValue(field, getCurrentSettingVal[field])                          
-            });
-        }, 400);
-        return () => clearTimeout(timer);
+    //   const fields = ['rsvp_event_mode','rsvp_event_id','rsvp_by_date','rsvp_by_time',
+    //     'rsvp_event_capacity','rsvp_individual','rsvp_individual_set_guest_limit',
+    //     'rsvp_individual_allow_invitee_to_name','rsvp_group','rsvp_group_set_guest_limit',
+    //     'rsvp_group_allow_invitee_to_name','id'];
+    //     const timer = setTimeout(() => {            
+    //         fields.forEach(field => {
+    //         //console.log(currentSettings[field])
+    //         setValue(field, getCurrentSettingVal[field])                          
+    //         });
+    //     }, 400);
+    //     return () => clearTimeout(timer);
 
-    }
+    // }
     
 
     
@@ -355,13 +345,13 @@ const RSVPForm = () => {
   useEffect( ()=>{       
     
     
-    
-    
+    // if(!editid){
+    //   console.log("calling......")
+    //   sessionStorage.removeItem("currentRsvpSettings")
+    //   sessionStorage.removeItem("currentSettingsval")      
+    // }    
 
-    localStorage.removeItem("currentRsvpSettings")
-    localStorage.removeItem("currentSettingsval")      
-    
-    const currentSettingsId = getCurretRsvpSettingsId()
+    const currentSettingsId = editid
     // if($('.select').length > 0) {
     //   $('.select').select2({
     //     minimumResultsForSearch: -1,        
@@ -369,24 +359,17 @@ const RSVPForm = () => {
     //   });
     // }     
     
-    
-    $(".rsvp_individual_set_guest_limit").prop('disabled', false);
-    $(".rsvp_individual_allow_invitee_to_name").prop('disabled', false);
-    
-    if(currentSettingsId ==0){
-      setTimeout(() => {          
-        $(".sw-btn-next").prop('disabled', true);
-      },400)
-    }
-     
-     //alert(currentSettingsId)
+    //$(".sw-btn-next").prop('disabled', true);    
     $('#smartwizard').smartWizard({      
       theme: 'arrows',   
       selected: 0,      
       transitionEffect:'fade',
       showStepURLhash: false,
       contentCache: true,   
-      enableURLhash: false,            
+      enableURLhash: false, 
+      keyboardSettings: {
+          keyNavigation: false, // Enable/Disable keyboard navigation(left and right keys are used if enabled)
+      },           
     });
     const currentSettingsEditId = editid     
     if(currentSettingsEditId && currentSettingsEditId > 0 && currentSettingsEditId !='' && currentSettingsEditId !== 0 && currentSettingsEditId !=null)
@@ -396,8 +379,7 @@ const RSVPForm = () => {
     $("#smartwizard").on("leaveStep", function(e, anchorObject, stepNumber, stepDirection, stepPosition) {    
   
       
-      const stepNumbers = stepDirection+1; 
-      const currentSettingsId = getCurretRsvpSettingsId()            
+      const stepNumbers = stepDirection+1;             
       if(stepNumbers === 1){        
         
         
@@ -411,6 +393,7 @@ const RSVPForm = () => {
         
         //console.log(editRsvpSettings)
         handleBasicFormTab()   
+        
         // Form Desing tab
         // if(currentSettingsId && currentSettingsId > 0 && currentSettingsId !='' && currentSettingsId != 0 && currentSettingsId !=null){
         //   getFormDesign(currentSettingsId)     
@@ -439,41 +422,88 @@ const RSVPForm = () => {
        }else if(stepNumbers === 4){        
         if(currentSettingsId && currentSettingsId > 0 && currentSettingsId !='' && currentSettingsId !== 0 && currentSettingsId !=null)
         { 
-          getFormDesignDetailId(currentSettingsId)
+          getFormDesignDetailId(currentSettingsId)  
+                  
         }
       }
     });
 
- },[]);
+ },[]); 
 
- // Get Form design details by ID
-const getFormDesignDetailId = (sid)=>{      
+// Get Form design details by ID
+const getFormDesignDetailId = (sid)=>{     
+
   RsvpService.getFormDesignDetailId(sid).then((res)=>{
       if(res.status === 200 && res.data.success === 1){      
-        if(res.data.result.length > 0){
-          if(res.data.result[0]['rsvp_basic_form'] === true){
-            //console.log("Basic Form")       
-            getBasicFormPreview() 
-          }  
-          if(res.data.result[0]['rsvp_custom_form'] === true){
-            //console.log("Custom Form")
-            getCustomFormPreview()
-            //getRsvpSById()
-          }
+        //console.log(res.data.result[0])        
+
+        if(res.data.result[0]['rsvp_basic_form'] === true){
+          //console.log("Basic Form")       
+          getBasicFormPreview() 
         }
 
-        
+        if(res.data.result[0]['rsvp_custom_form'] === true){
+          //console.log("Custom Form")
+          getCustomFormPreview()
+          //getRsvpSById()
+        }
       }
     }
   ).catch(error => {
     console.log(error)
   });
+
 }
 
- const getRsvpSettingsById = (id) => {        
+
+ const getRsvpSettingsById = (id) => {     
   RsvpService.getRsvpSettingsById(id).then((response)=>{      
       if(response.status === 200 && response.data.success ===1){                                               
-        localStorage.setItem('currentSettingsval',JSON.stringify(response.data.data[0]));
+        const ssss = sessionStorage.setItem('currentSettingsval',JSON.stringify(response.data.data[0]));
+
+        const getCurrentSettingVal = JSON.parse(sessionStorage.getItem('currentSettingsval'))           
+        //console.log(getCurrentSettingVal)
+        if(getCurrentSettingVal != null){
+
+          if(getCurrentSettingVal.rsvp_event_mode){
+            getAllEvents(getCurrentSettingVal.rsvp_event_mode)
+          }
+      
+          const fields = ['rsvp_event_mode','rsvp_event_id','rsvp_by_date','rsvp_by_time',
+            'rsvp_event_capacity','rsvp_individual','rsvp_individual_set_guest_limit',
+            'rsvp_individual_allow_invitee_to_name','rsvp_group','rsvp_group_set_guest_limit',
+            'rsvp_group_allow_invitee_to_name','id','rsvp_allow_group_guests','rsvp_allow_individual_guests'];
+            const timer = setTimeout(() => {            
+
+              
+            
+                fields.forEach(field => {
+                //console.log(currentSettings[field])
+                setValue(field, getCurrentSettingVal[field])                          
+
+                if(getCurrentSettingVal['rsvp_group'] ===true){
+                  $(".rsvp_group_set_guest_limit").prop('disabled', false);
+                  $(".rsvp_group_allow_invitee_to_name").prop('disabled', false);                  
+                  //setValue('rsvp_allow_group_guests',true)
+                  setValue('rsvp_allow_group_guests',"on")
+                  setValue('rsvp_allow_individual_guests',false)                          
+                }
+                if(getCurrentSettingVal['rsvp_individual']===true){
+                  $(".rsvp_individual_set_guest_limit").prop('disabled', false);
+                  $(".rsvp_individual_allow_invitee_to_name").prop('disabled', false);                  
+                  //setValue('rsvp_allow_individual_guests',true)                          
+                  setValue('rsvp_allow_individual_guests',"on")
+                  setValue('rsvp_allow_group_guests',false)
+                }
+
+                });
+            }, 300);
+            return () => clearTimeout(timer);
+
+            
+
+        }
+
       }
     }
   ).catch(error => {
@@ -525,12 +555,12 @@ const handleUpdateCustomFormStatus = (e,id)=>{
 const getEventName = (sid)=>{
   RsvpService.getRsvpSettingsById(sid).then((response)=>{      
     if(response.status === 200 && response.data.success ===1){                                                       
-      //console.log(response.data.data[0])            
+      //console.log(response.data.data[0]['rsvp_event_id'])            
       setRsvpSettingsPreview(response.data.data[0])
-      // Get Events by id
+      // Get Events by id      
       if(response.data.data[0]['rsvp_event_id']){
-        getEventDetailById(response.data.data[0]['rsvp_event_id']) 
-        getChildEventsById(response.data.data[0]['rsvp_event_id'])                       
+        getEventDetailById(response.data.data[0]['rsvp_event_id'])                        
+        getChildEventsById(response.data.data[0]['rsvp_event_id'])
       }
       
     }
@@ -641,10 +671,11 @@ const handlechangeevent = (e)=>{
  const getParentEventsById = (peventid)=>{      
   EventService.getEventDetail(peventid).then((res)=>{
       if(res.status === 200){      
+        //console.log(res.data.result)
         const resArr = [res.data.result]  
-        setChooseParentEventParticipate(resArr)    
-        //setPEventCapacity(resArr)
-      }
+        setChooseParentEventParticipate(resArr)          
+        // setPEventCapacity(resArr)
+      } 
     }
   ).catch(error => {
     console.log(error)
@@ -669,21 +700,21 @@ const handlechangeevent = (e)=>{
     console.log(error)
   });
 }
-
-
+    
 //Edit Default Email Settings Start
 const getDEmailSettings = (sid,type)=>{
   
   if(type === 'RSVPYES'){
     RsvpService.getDEmailSettingsDetail(sid,type).then((res)=>{
-        if(res.status === 200){          
-          //console.log(res.data.result[0]['id'])          
+        if(res.status === 200){                    
           //setData(res.data.result)
           if(res.data.result.length > 0){
             dRsvpIsYesSetValue("id", res.data.result[0]['id'])
             dRsvpIsYesSetValue("d_rsvp_is_yes_subject", res.data.result[0]['rsvp_subject'])  
+            dRsvpIsYesSetValue("d_rsvp_is_yes_content", res.data.result[0]['rsvp_body'])  
+            //onDRsvpIsYesChange(res.data.result[0]['rsvp_body'])  
           }          
-          //onDRsvpIsYesChange(res.data.result[0]['rsvp_body'])
+          
           //console.log(dRsvpIsYesContent)          
         }
       }
@@ -700,7 +731,8 @@ const getDEmailSettings = (sid,type)=>{
         if(res.data.result.length > 0){
           dRsvpIsNoSetValue("id", res.data.result[0]['id'])
           dRsvpIsNoSetValue("d_rsvp_is_no_subject", res.data.result[0]['rsvp_subject'])
-          onDRsvpIsNoChange(res.data.result[0]['rsvp_body'])
+          dRsvpIsNoSetValue("d_rsvp_is_no_content", res.data.result[0]['rsvp_body'])
+          //onDRsvpIsNoChange(res.data.result[0]['rsvp_body'])
         }        
         //console.log(dRsvpIsYesContent)          
       }
@@ -720,7 +752,7 @@ const getFormDesign = (sid)=>{
   
     RsvpService.getFormDesignDetail(sid).then((res)=>{
         if(res.status === 200){          
-          //console.log(res.data)          
+          //console.log(res.data.result.length)          
           //setData(res.data.result)
           if(res.data.result.length > 0){
             basicFormSetValue("id", res.data.result[0]['id'])
@@ -734,6 +766,9 @@ const getFormDesign = (sid)=>{
               custFormSetValue("custom_form_term_use", res.data.result[0]['rsvp_custom_form'])
               custFormSetValue("custom_form_able_to_makeit", res.data.result[0]['rsvp_able_to_make_it'])
             }            
+          }else{
+            basicFormSetValue("id", 0)
+            custFormSetValue("id", 0)
           }
         }
       }
@@ -747,11 +782,12 @@ const getReminderEmailSettings = (sid,type)=>{
   if(type === 'PNAMEOFATTENDEES1'){
     RsvpService.getReminderEmailSettingsDetail(sid,type).then((res)=>{
         if(res.status === 200){          
-          //console.log(res.data.result.length)          
+          //console.log(res.data.result)          
           //setData(res.data.result)
           if(res.data.result.length > 0){
             r1PNASetValue("id", res.data.result[0]['id'])
             r1PNASetValue("r_1_pna_subject", res.data.result[0]['rsvp_subject'])
+            r1PNASetValue("r_1_pna_content", res.data.result[0]['rsvp_body'])
           }
           
           //onDRsvpIsYesChange(res.data.result[0]['rsvp_body'])
@@ -771,6 +807,7 @@ const getReminderEmailSettings = (sid,type)=>{
         if(res.data.result.length > 0){
           r2PNASetValue("id", res.data.result[0]['id'])
           r2PNASetValue("r_2_pna_subject", res.data.result[0]['rsvp_subject'])
+          r2PNASetValue("r_2_pna_content", res.data.result[0]['rsvp_body'])
         }        
         //console.log(dRsvpIsYesContent)          
       }
@@ -789,6 +826,7 @@ const getReminderEmailSettings = (sid,type)=>{
         if(res.data.result.length > 0){
           regClosedESetValue("id", res.data.result[0]['id'])
           regClosedESetValue("reg_closed_e_subject", res.data.result[0]['rsvp_subject'])
+          regClosedESetValue("reg_closed_e_content", res.data.result[0]['rsvp_body'])
         }        
         //console.log(dRsvpIsYesContent)          
       }
@@ -807,6 +845,7 @@ const getReminderEmailSettings = (sid,type)=>{
         if(res.data.result.length > 0){
           rEPriorSetValue("id", res.data.result[0]['id'])
           rEPriorSetValue("r_eprior_subject", res.data.result[0]['rsvp_subject'])
+          rEPriorSetValue("r_eprior_content", res.data.result[0]['rsvp_body'])
         }        
         //console.log(dRsvpIsYesContent)          
       }
@@ -823,7 +862,7 @@ const getReminderEmailSettings = (sid,type)=>{
 // Default tab - RSVP Is Yes FORM Start
 const {
   register:dRsvpIsYesRegister, handleSubmit:defaultRsvpIsYesHandleSubmit,  
-  setValue:dRsvpIsYesSetValue, values, watch:dRsvpIsYesWatch,  
+  setValue:dRsvpIsYesSetValue, watch:dRsvpIsYesWatch,  
   formState: { errors:dRsvpIsYesErrors}} = useForm();
 
 const onDRsvpIsYesChange = (dRsvpIsYesState) => {  
@@ -836,7 +875,7 @@ useEffect(() => {
 }, [dRsvpIsYesRegister]);
 
 //const dRsvpIsYesSubject = dRsvpIsYesWatch("d_rsvp_is_yes_subject");
-//const dRsvpIsYesContent = dRsvpIsYesWatch("d_rsvp_is_yes_content");
+const dRsvpIsYesContent = dRsvpIsYesWatch("d_rsvp_is_yes_content");
 
 const onDRsvpIsYesSubmit = (data) => {    
   //console.log(data);
@@ -908,7 +947,7 @@ useEffect(() => {
 }, [dRsvpIsNoRegister]);
 
 //const dRsvpIsNoSubject = dRsvpIsNoWatch("d_rsvp_is_no_subject");
-//const dRsvpIsNoContent = dRsvpIsNoWatch("d_rsvp_is_no_content");
+const dRsvpIsNoContent = dRsvpIsNoWatch("d_rsvp_is_no_content");
 
 const onDRsvpIsNoSubmit = (data) => {  
   //console.log(data); 
@@ -972,8 +1011,8 @@ const {
   setValue:r1PNASetValue, watch:r1PNAWatch,  
   formState: { errors:r1PNAErrors}} = useForm();
 
-const onR1PNAChange = (dRsvpIsNoState) => {  
-  r1PNASetValue("r_1_pna_content", dRsvpIsNoState);
+const onR1PNAChange = (state) => {  
+  r1PNASetValue("r_1_pna_content", state);
 };
 
 useEffect(() => {
@@ -982,7 +1021,7 @@ useEffect(() => {
 }, [r1PNARegister]);
 
 //const r1PNASubject = r1PNAWatch("r_1_pna_subject");
-//const r1PNAContent = r1PNAWatch("r_1_pna_content");
+const r1PNAContent = r1PNAWatch("r_1_pna_content");
 
 const onR1PNASubmit = (data) => {  
 
@@ -1050,7 +1089,7 @@ useEffect(() => {
 }, [r2PNARegister]);
 
 //const r2PNASubject = r2PNAWatch("r_2_pna_subject");
-//const r2PNAContent = r2PNAWatch("r_2_pna_content");
+const r2PNAContent = r2PNAWatch("r_2_pna_content");
 
 const onR2PNASubmit = (data) => {    
 
@@ -1118,7 +1157,7 @@ useEffect(() => {
 }, [regClosedERegister]);
 
 //const regClosedESubject = regClosedEWatch("reg_closed_e_subject");
-//const regClosedEContent = regClosedEWatch("reg_closed_e_content");
+const regClosedEContent = regClosedEWatch("reg_closed_e_content");
 
 const onRregClosedESubmit = (data) => {  
   data["rsvp_settings_id"] = currentSettingsId ? currentSettingsId : 0; 
@@ -1184,7 +1223,7 @@ useEffect(() => {
 }, [rEPriorRegister]);
 
 //const rEPriorSubject = rEPriorWatch("r_eprior_subject");
-//const rEPriorContent = rEPriorWatch("r_eprior_content");
+const rEPriorContent = rEPriorWatch("r_eprior_content");
 
 const onREPriorSubmit = (data) => {  
   data["rsvp_settings_id"] = currentSettingsId ? currentSettingsId : 0; 
@@ -1258,7 +1297,7 @@ const onBasicFormSubmit = (data) => {
   data["rsvp_form_term"] = data["basic_form_term_use"];
   data["rsvp_able_to_make_it"] = data["basic_form_able_to_makeit"];   
 
-  //console.log(data);
+  console.log(data);
   if(data['id'] && data['id'] > 0){
 
     RsvpService.updateFormDesign(data).then(
@@ -1320,7 +1359,7 @@ const onCustFormSubmit = (data) => {
   data["rsvp_form_term"] = data["custom_form_term_use"];
   data["rsvp_able_to_make_it"] = data["custom_form_able_to_makeit"];   
 
-  console.log(data);
+  //console.log(data);
   if(data['id'] && data['id'] > 0){
 
     RsvpService.updateFormDesign(data).then(
@@ -1365,8 +1404,9 @@ const onCustFormSubmit = (data) => {
 const getEventDetailById = (id)=>{      
   EventService.getEventDetail(id).then((res)=>{
     if(res.status === 200){                
+      //console.log(res.data.result)
       setEventDetailByID(res.data.result)
-      setEventName(res.data.result.p_event_title)          
+      setEventName(res.data.result.p_event_title)       
     }
   }
 ).catch(error => {
@@ -1376,13 +1416,12 @@ const getEventDetailById = (id)=>{
 //Get Event Details by ID End
 
 // Get Basic Form Preview Start
-const getBasicFormPreview = ()=>{
-  const currentSettingsId = getCurretRsvpSettingsId() 
-  setFormDesingTitleName('BASIC')  
-  if(currentSettingsId && currentSettingsId > 0 && currentSettingsId !=''){
+const getBasicFormPreview = ()=>{ 
+  setFormDesingTitleName('BASIC')
+  if(editid && editid > 0 && editid !=''){
 
     // Get RSVP Custom Form Details Start
-      RsvpService.getBasicFormDetails(currentSettingsId).then((res)=>{
+      RsvpService.getBasicFormDetails(editid).then((res)=>{
           if(res.status === 200){          
             //console.log(res.data.result)
             setFormDesignPreview(res.data.result)
@@ -1400,12 +1439,11 @@ const getBasicFormPreview = ()=>{
 
 // Get Custom Form Preview Start
 const getCustomFormPreview = ()=>{ 
-  const currentSettingsId = getCurretRsvpSettingsId() 
   setFormDesingTitleName('CUSTOM')
-  if(currentSettingsId && currentSettingsId > 0 && currentSettingsId !=''){
+  if(editid && editid > 0 && editid !=''){
 
     // Get RSVP Custom Form Details Start
-      RsvpService.getCustomFormDetails(currentSettingsId).then((res)=>{
+      RsvpService.getCustomFormDetails(editid).then((res)=>{
           if(res.status === 200){          
             //console.log(res.data.result)
             setFormDesignPreview(res.data.result)
@@ -1423,12 +1461,11 @@ const getCustomFormPreview = ()=>{
 
 
 const getRsvpSById = ()=>{
-  const currentSettingsId = getCurretRsvpSettingsId() 
   // Get RSVP Settings Details By ID Start
-  RsvpService.getRsvpSettingsById(currentSettingsId).then((response)=>{      
+  RsvpService.getRsvpSettingsById(editid).then((response)=>{      
     if(response.status === 200 && response.data.success ===1){                                                       
       //console.log(response.data.data[0])
-      setRsvpSettingsPreview(response.data.data[0])
+      setRsvpSettingsPreview(response.data.data[0])      
       // Get Events by id
       if(response.data.data[0]['rsvp_event_id']){
         getEventDetailById(response.data.data[0]['rsvp_event_id'])
@@ -1445,9 +1482,8 @@ const getRsvpSById = ()=>{
 
 // Get default email template preview start 
 const getDEmailTemplatePreview = ()=>{
-  const currentSettingsId = getCurretRsvpSettingsId() 
   console.log("default template")
-  RsvpService.getDEmailTemplatePreview(currentSettingsId).then((response)=>{      
+  RsvpService.getDEmailTemplatePreview(editid).then((response)=>{      
     if(response.status === 200 && response.data.success ===1){                                                       
       //console.log(response.data.result)
       setDEmailTemplatePreview(response.data.result)
@@ -1461,9 +1497,8 @@ const getDEmailTemplatePreview = ()=>{
 
 // Get reminder email template preview start 
 const getREmailTemplatePreview = ()=>{
-  const currentSettingsId = getCurretRsvpSettingsId() 
-  console.log("default template")
-  RsvpService.getREmailTemplatePreview(currentSettingsId).then((response)=>{      
+  //console.log("default template")
+  RsvpService.getREmailTemplatePreview(editid).then((response)=>{      
     if(response.status === 200 && response.data.success ===1){                                                       
       //console.log(response.data.result)
       setREmailTemplatePreview(response.data.result)
@@ -1489,8 +1524,7 @@ const onClickAllowGuestes = (param,e)=>{
 
 
 const generateRavpLink = ()=>{  
-  const currentSettingsId = getCurretRsvpSettingsId() 
-  const rsvpUrl = "http://"+window.location.hostname+':3000/rsvp/'+currentSettingsId
+  const rsvpUrl = "http://"+window.location.hostname+':3000/rsvp/'+editid
   setValueGenereatedLink(rsvpUrl);
 }
 
@@ -1506,9 +1540,8 @@ const copyRavpLink = (copyText)=>{
 
 const rsvpPagePulblish = ()=>{ 
 
-    const currentSettingsId = getCurretRsvpSettingsId()
     const data = {}
-    data['id'] = currentSettingsId ? currentSettingsId :0
+    data['id'] = editid
     data['rsvp_status'] = 'Published'      
 
     RsvpService.updateRsvpSettings(data).then(
@@ -1525,7 +1558,6 @@ const rsvpPagePulblish = ()=>{
       }
     );
 }
-
   return (
     
     <div>
@@ -1539,7 +1571,7 @@ const rsvpPagePulblish = ()=>{
         <div className="page-header">
             <div className="row align-items-center">
               <div className="col">
-                <h3 className="page-title">RSVP </h3>                
+                <h3 className="page-title">Edit RSVP </h3>                
               </div>              
             </div>
           </div>
@@ -1674,7 +1706,7 @@ const rsvpPagePulblish = ()=>{
                           <div className="col-sm-6 col-md-2">
                             <div className="form-group">                            
                               <div className="form-check form-check-inline">
-                                <input type="radio" className="form-check-input" ref={settingsRegister('rsvp_allow_individual_guests')} onClick={(e)=>onClickAllowGuestes('individual',e)} id="individual" {...settingsRegister("rsvp_allow_individual_guests")} defaultChecked/>
+                                <input type="checkbox" className="form-check-input" id="individual" ref={settingsRegister('rsvp_allow_individual_guests')} onClick={(e)=>onClickAllowGuestes('individual',e)} {...settingsRegister("rsvp_allow_individual_guests")}/>
                                 <label className="form-check-label" htmlFor="individual">
                                   Individual RSVP
                                 </label>                                                                
@@ -1684,7 +1716,7 @@ const rsvpPagePulblish = ()=>{
                           </div>
                           <div className="col-sm-6 col-md-4">
                             <div className="form-group">                            
-                                <select className="form-select rsvp_individual_set_guest_limit" ref={settingsRegister('rsvp_allow_individual_guests')} {...settingsRegister("rsvp_individual_set_guest_limit")} disabled={!settingFormWatch("rsvp_allow_individual_guests")} >                  
+                                <select className="form-select" ref={settingsRegister('rsvp_allow_individual_guests')} {...settingsRegister("rsvp_individual_set_guest_limit")} disabled={!settingFormWatch("rsvp_allow_individual_guests")}>                  
                                   <option value="">Set limit for plus-one guests</option>
                                   <option value="1">1</option>
                                   <option value="2">2</option>                                
@@ -1711,7 +1743,7 @@ const rsvpPagePulblish = ()=>{
                           </div>
                           <div className="col-sm-6 col-md-4">
                             <div className="form-group">                            
-                                <select className="form-select rsvp_individual_allow_invitee_to_name" ref={settingsRegister('rsvp_allow_individual_guests')} {...settingsRegister("rsvp_individual_allow_invitee_to_name")} disabled={!settingFormWatch("rsvp_allow_individual_guests")}>                  
+                                <select className="form-select" ref={settingsRegister('rsvp_allow_individual_guests')} {...settingsRegister("rsvp_individual_allow_invitee_to_name")} disabled={!settingFormWatch("rsvp_allow_individual_guests")}>                  
                                   <option value="">Allow Primary invitee to name the plus ones</option>
                                   <option value="yes">Yes</option>
                                   <option value="no">No</option>                                
@@ -1724,7 +1756,7 @@ const rsvpPagePulblish = ()=>{
                           <div className="col-sm-6 col-md-2">
                             <div className="form-group">                            
                               <div className="form-check form-check-inline">
-                              <input type="radio" className="form-check-input" ref={settingsRegister('rsvp_allow_group_guests')} onClick={(e)=>onClickAllowGuestes('group',e)} id="group" {...settingsRegister("rsvp_allow_group_guests")} />
+                              <input type="checkbox" className="form-check-input" id="group" ref={settingsRegister('rsvp_allow_group_guests')} onClick={(e)=>onClickAllowGuestes('group',e)} {...settingsRegister("rsvp_allow_group_guests")}/>
                               <label className="form-check-label" htmlFor="group">
                                 Group RSVP
                               </label>
@@ -1787,7 +1819,7 @@ const rsvpPagePulblish = ()=>{
                               <form onSubmit={basicFormHandleSubmit(onBasicFormSubmit)}>
                               <section className="review-section">
                               <div className="row">
-                                <div className="col-md-9">
+                                <div className="col-md-12">
                                     <div className="review-header1 text-left">                                
                                       <h3 className="review-title">Basic Form</h3>
                                       <div className="text-muted">
@@ -1853,7 +1885,7 @@ const rsvpPagePulblish = ()=>{
                                   </div>                                  
                                 </div>
                               </section>                              
-                                <div className="submit-section">                
+                                <div className="submit-section">                                                  
                                   <a onClick={() =>getBasicFormPreview()} data-bs-toggle="modal" data-bs-target="#preview_custom_form" className="btn btn-custom-theme submit-btn min-w-btn-145">PREVIEW</a>
                                   <button className="btn btn-primary submit-btn ms-1 mw-100 min-w-btn-145" type="submit">USE FORM</button>
                                 </div>
@@ -1865,7 +1897,7 @@ const rsvpPagePulblish = ()=>{
                             <form onSubmit={custFormHandleSubmit(onCustFormSubmit)}>
                           <section className="review-section">
                           <div className="row">
-                              <div className="col-md-8">
+                              <div className="col-md-12">
                                 <div className="review-header1 text-left">
                                   <h3 className="review-title">Custom Form</h3>
                                   <div className="text-muted">
@@ -1937,8 +1969,8 @@ const rsvpPagePulblish = ()=>{
                               </div>
                               </section>                              
                               <a href="#" className="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_question"><i className="fa fa-plus" />Add Form Element</a><br/>
-                              <div className="submit-section">                
-                              <a onClick={() =>getCustomFormPreview()} data-bs-toggle="modal" data-bs-target="#preview_custom_form" className="btn btn-custom-theme submit-btn min-w-btn-145">PREVIEW</a>
+                              <div className="submit-section">                                                
+                                <a onClick={() =>getCustomFormPreview()} data-bs-toggle="modal" data-bs-target="#preview_custom_form" className="btn btn-custom-theme submit-btn min-w-btn-145">PREVIEW</a>
                                 <button className="btn btn-primary submit-btn ms-1 mw-100 min-w-btn-145" type="submit">USER FORM</button>
                               </div>
                               </form>
@@ -2019,7 +2051,7 @@ const rsvpPagePulblish = ()=>{
                                     
                                     <div className="col-sm-12 col-md-12">
                                       <div className="form-group">                                            
-                                        <ReactQuill modules={modules} onChange={onDRsvpIsYesChange}/>
+                                        <ReactQuill modules={modules} value={dRsvpIsYesContent || ''} onChange={onDRsvpIsYesChange}/>
                                         {dRsvpIsYesErrors.d_rsvp_is_yes_content && <div className="invalid-feedback">                                            
                                             {dRsvpIsYesErrors.d_rsvp_is_yes_content && "Please enter body content"}
                                         </div>}
@@ -2085,7 +2117,7 @@ const rsvpPagePulblish = ()=>{
                                     
                                     <div className="col-sm-12 col-md-12">
                                       <div className="form-group">                                            
-                                      <ReactQuill modules={modules} onChange={onDRsvpIsNoChange}/>
+                                      <ReactQuill modules={modules} value={dRsvpIsNoContent || ''} onChange={onDRsvpIsNoChange}/>
                                         {dRsvpIsNoErrors.d_rsvp_is_no_content && <div className="invalid-feedback">                                            
                                             {dRsvpIsNoErrors.d_rsvp_is_no_content && "Please enter body content"}
                                         </div>}
@@ -2100,8 +2132,8 @@ const rsvpPagePulblish = ()=>{
                                                                           
                                   </div>
                                   </form>
-                                  <div className="submit-section">                
-                                      <a onClick={() =>getDEmailTemplatePreview()} data-bs-toggle="modal" data-bs-target="#preview_default_template" className="btn btn-custom-theme submit-btn min-w-btn-145">PREVIEW</a>
+                                  <div className="submit-section">                                                    
+                                    <a onClick={() =>getDEmailTemplatePreview()} data-bs-toggle="modal" data-bs-target="#preview_default_template" className="btn btn-custom-theme submit-btn min-w-btn-145">PREVIEW</a>
                                   </div>
 
                                 </div>
@@ -2127,7 +2159,7 @@ const rsvpPagePulblish = ()=>{
                                   <div className="col-sm-12 col-md-12">
                                     <div className="form-group">                                            
                                       <label>Body</label>
-                                      <ReactQuill modules={modules} onChange={onR1PNAChange}/>
+                                      <ReactQuill modules={modules} value={r1PNAContent || ''} onChange={onR1PNAChange}/>
                                         {r1PNAErrors.r_1_pna_content && <div className="invalid-feedback">                                            
                                             {r1PNAErrors.r_1_pna_content && "Please enter body content"}
                                         </div>}
@@ -2161,7 +2193,7 @@ const rsvpPagePulblish = ()=>{
                                   <div className="col-sm-12 col-md-12">
                                     <div className="form-group">                                            
                                       <label>Body</label>
-                                      <ReactQuill modules={modules} onChange={onR2PNAChange}/>
+                                      <ReactQuill modules={modules} value={r2PNAContent || ''} onChange={onR2PNAChange}/>
                                         {r2PNAErrors.r_2_pna_content && <div className="invalid-feedback">                                            
                                             {r2PNAErrors.r_2_pna_content && "Please enter body content"}
                                         </div>}
@@ -2195,7 +2227,7 @@ const rsvpPagePulblish = ()=>{
                                   <div className="col-sm-12 col-md-12">
                                     <div className="form-group">                                            
                                       <label>Body</label>
-                                      <ReactQuill modules={modules} onChange={onRegClosedEChange}/>
+                                      <ReactQuill modules={modules} value={regClosedEContent || ''} onChange={onRegClosedEChange}/>
                                         {regClosedEErrors.reg_closed_e_content && <div className="invalid-feedback">                                            
                                             {regClosedEErrors.reg_closed_e_content && "Please enter body content"}
                                         </div>}
@@ -2229,7 +2261,7 @@ const rsvpPagePulblish = ()=>{
                                   <div className="col-sm-12 col-md-12">
                                     <div className="form-group">                                            
                                       <label>Body</label>
-                                      <ReactQuill modules={modules} onChange={onREPriorChange}/>
+                                      <ReactQuill modules={modules} value={rEPriorContent || ''} onChange={onREPriorChange}/>
                                         {rEPriorErrors.r_eprior_content && <div className="invalid-feedback">                                            
                                             {rEPriorErrors.r_eprior_content && "Please enter body content"}
                                         </div>}
@@ -2283,78 +2315,78 @@ const rsvpPagePulblish = ()=>{
                               <div className="card">
                                 <div className="card-body"> 
 
-                                    <div className="col-sm-12 col-md-12">
-                                      <div className="form-group text-center">                               
-                                        <h2 className="h2-horizontal-line"><span>RSVP</span></h2>
-                                      </div>
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group text-center">                               
+                                      <h2 className="h2-horizontal-line"><span>RSVP</span></h2>
+                                    </div>
+                                  </div>
+
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group text-center">                               
+                                      <h3>{eventDetailByID.p_event_title}</h3>
+                                    </div>
+                                  </div>
+
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group text-center">                               
+                                    {/* <h4>March 04, 2022</h4> */}
+                                      <h4>{moment(rsvpSettingsPreview.rsvp_by_date).format('MMMM Do, YYYY')} &nbsp;
+                                      {moment(rsvpSettingsPreview.rsvp_by_time, "HH:mm").format("hh:mm A")}</h4>
+                                    </div>
+                                  </div>
+
+                                  <div className="col-sm-12 col-md-12">
+                                    <div className="form-group text-center">                                
+                                      
+                                    <label>Please let us know if you will be able to make it.</label><br/>
+                                    <div className="form-check form-check-inline">
+                                      <input className="form-check-input" type="radio" id="preview_active" defaultValue="Active" />
+                                      <label className="form-check-label" htmlFor="preview_active">Yes, I'll be there</label>
+                                    </div>
+                                    <div className="form-check form-check-inline">
+                                      <input className="form-check-input" type="radio" id="preview_inactive" defaultValue="Inactive" />
+                                      <label className="form-check-label" htmlFor="preview_inactive">No, I can't make it</label>
                                     </div>
 
-                                    <div className="col-sm-12 col-md-12">
-                                      <div className="form-group text-center">                               
-                                        <h3>{eventDetailByID.p_event_title}</h3>
-                                      </div>
                                     </div>
+                                  </div>                   
 
-                                    <div className="col-sm-12 col-md-12">
-                                      <div className="form-group text-center">                               
-                                      {/* <h4>March 04, 2022</h4> */}
-                                        <h4>{moment(rsvpSettingsPreview.rsvp_by_date).format('MMMM Do, YYYY')} &nbsp;
-                                        {moment(rsvpSettingsPreview.rsvp_by_time, "HH:mm").format("hh:mm A")}</h4>
-                                      </div>
+
+                                    <div className="h3 card-title">                        
+                                      <label>CONTACT INFO</label>
                                     </div>
-
-                                    <div className="col-sm-12 col-md-12">
-                                      <div className="form-group text-center">                                
                                         
-                                      <label>Please let us know if you will be able to make it.</label><br/>
-                                      <div className="form-check form-check-inline">
-                                        <input className="form-check-input" type="radio" id="preview_active" defaultValue="Active" />
-                                        <label className="form-check-label" htmlFor="preview_active">Yes, I'll be there</label>
-                                      </div>
-                                      <div className="form-check form-check-inline">
-                                        <input className="form-check-input" type="radio" id="preview_inactive" defaultValue="Inactive" />
-                                        <label className="form-check-label" htmlFor="preview_inactive">No, I can't make it</label>
-                                      </div>
+                                    {formDesignPreview.map(({rsvp_field_name,rsvp_field_type,rsvp_field_options},index)=><div className="col-sm-12 col-md-12">
+                                      {rsvp_field_type && rsvp_field_type =='textbox' && <div className="form-group">
+                                        <input className="form-control" type={rsvp_field_type} placeholder={rsvp_field_name}/>                                    
+                                      </div>}                         
+                                      {rsvp_field_type && rsvp_field_type =='radio' && <div className="form-group">
+                                        <label>{rsvp_field_name}</label><br/>
+                                          {rsvp_field_options.map(item=><div className="form-check form-check-inline">
+                                            <input className="form-check-input" type="radio"  id={item}/>
+                                            <label className="form-check-label" htmlFor={item}>{item}</label>
+                                          </div>)}                          
+                                      </div>}     
+                                      {rsvp_field_type && rsvp_field_type =='dropdown' && <div className="form-group">                        
+                                        <select className="form-select">          
+                                          <option value="">{rsvp_field_name}</option>                
+                                          {rsvp_field_options.map(item=><option value={item}>{item}</option>)}                                 
+                                        </select>
+                                      </div>}     
+                                      {rsvp_field_type && rsvp_field_type =='checkbox' && <div className="form-group">
+                                        <label>{rsvp_field_name}</label><br/>
+                                          {rsvp_field_options.map(item=><div className="form-check form-check-inline">
+                                            <input className="form-check-input" type="checkbox" id={item}/>
+                                            <label className="form-check-label" htmlFor={item}>{item}</label>
+                                          </div>)}                          
+                                      </div>} 
+                                      {rsvp_field_type && rsvp_field_type =='textarea' && <div className="form-group">                        
+                                        <textarea className="form-control" placeholder={rsvp_field_name}></textarea>
+                                      </div>}      
+                                    </div>)}                  
 
-                                      </div>
-                                    </div>                   
-
-
-                                      <div className="h3 card-title">                        
-                                        <label>CONTACT INFO</label>
-                                      </div>
-                                          
-                                      {formDesignPreview.map(({rsvp_field_name,rsvp_field_type,rsvp_field_options},index)=><div className="col-sm-12 col-md-12">
-                                        {rsvp_field_type && rsvp_field_type =='textbox' && <div className="form-group">
-                                          <input className="form-control" type={rsvp_field_type} placeholder={rsvp_field_name}/>                                    
-                                        </div>}                         
-                                        {rsvp_field_type && rsvp_field_type =='radio' && <div className="form-group">
-                                          <label>{rsvp_field_name}</label><br/>
-                                            {rsvp_field_options.map(item=><div className="form-check form-check-inline">
-                                              <input className="form-check-input" type="radio"  id={item}/>
-                                              <label className="form-check-label" htmlFor={item}>{item}</label>
-                                            </div>)}                          
-                                        </div>}     
-                                        {rsvp_field_type && rsvp_field_type =='dropdown' && <div className="form-group">                        
-                                          <select className="form-select">          
-                                            <option value="">{rsvp_field_name}</option>                
-                                            {rsvp_field_options.map(item=><option value={item}>{item}</option>)}                                 
-                                          </select>
-                                        </div>}     
-                                        {rsvp_field_type && rsvp_field_type =='checkbox' && <div className="form-group">
-                                          <label>{rsvp_field_name}</label><br/>
-                                            {rsvp_field_options.map(item=><div className="form-check form-check-inline">
-                                              <input className="form-check-input" type="checkbox" id={item}/>
-                                              <label className="form-check-label" htmlFor={item}>{item}</label>
-                                            </div>)}                          
-                                        </div>} 
-                                        {rsvp_field_type && rsvp_field_type =='textarea' && <div className="form-group">                        
-                                          <textarea className="form-control" placeholder={rsvp_field_name}></textarea>
-                                        </div>}      
-                                      </div>)}                  
-
-
-                                    </div>
+                                  
+                                </div>
 
                                 <div className="col-sm-12 col-md-12"> 
                                   <div className="card">
@@ -2378,7 +2410,7 @@ const rsvpPagePulblish = ()=>{
                                                 </td>
                                                 <td>600 Rs/per person</td>                                                                           
                                               </tr> */}
-                                              
+
                                               {chooseParentEventParticipate.map(({p_event_title,p_event_price},i)=><tr key={i}>
                                                 <td>
                                                   <div className="form-check form-check-inline">
@@ -2403,7 +2435,7 @@ const rsvpPagePulblish = ()=>{
                                                 </td>
                                                 <td>{c_event_price} Rs/per person</td>                                        
                                                 
-                                              </tr>)} 
+                                              </tr>)}                                              
                                               
                                               </tbody>
                                             </table>
@@ -2418,20 +2450,15 @@ const rsvpPagePulblish = ()=>{
                                   <div className="form-group text-center">
                                     <label><strong>Total: 600 Rs</strong></label>
                                   </div>
-                                </div> */}
-
-                                {/* <div className="col-sm-12 col-md-12 mt-2">
-                                  <div className="form-group text-center">
-                                    <button className="btn btn-custom-theme submit-btn min-w-btn-145" type="submit">Pay</button>
-                                  </div>
-                                </div>  */}
+                                </div>*/}
 
                               </div>              
                             </div>
 
                           </div>
                         </div>
-                      </div>                                            
+                      </div>                      
+                      
                     </div>
 
                     <div className="row mt-4">
@@ -2443,16 +2470,16 @@ const rsvpPagePulblish = ()=>{
                       </div>
 
                       <div className="col-sm-12 col-md-6 mt-3">
-                        <div className="form-group">                                                         
+                        <div className="form-group">                                  
                           <a onClick={() =>generateRavpLink()} className="btn btn-custom-theme submit-btn min-w-btn-145">Generate</a>
-                          <a onClick={() =>copyRavpLink(valueGenereatedLink)} className="btn btn-primary submit-btn ms-2 min-w-btn-145">Copy</a>
+                          <a onClick={() =>copyRavpLink(valueGenereatedLink)} className="btn btn-primary submit-btn ms-2 min-w-btn-145">Copy</a>                          
                         </div>
                       </div>                      
 
                     </div>
 
-                    <div className="submit-section">                                      
-                    <a onClick={() =>rsvpPagePulblish(valueGenereatedLink)} className="btn btn-primary submit-btn min-w-btn-145">Publish RSVP Page</a>
+                    <div className="submit-section">                                                            
+                      <a onClick={() =>rsvpPagePulblish(valueGenereatedLink)} className="btn btn-primary submit-btn min-w-btn-145">Publish RSVP Page</a>
                     </div>
 
                   </div>                  
@@ -2867,7 +2894,7 @@ const rsvpPagePulblish = ()=>{
             </div>
           </div>
       </div>
-      {/* Preview Default Email Template Modal End */}
+      {/* Preview Default Email Template Modal End */}       
         
       </div>
         
@@ -2875,4 +2902,4 @@ const rsvpPagePulblish = ()=>{
   )
 }
 
-export default RSVPForm
+export default RSVPEditForm

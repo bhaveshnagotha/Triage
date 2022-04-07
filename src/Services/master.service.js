@@ -20,8 +20,8 @@ const deletes = (id,action) =>{
 
 
 // Event Types Start
-const getEventTypeList = () => {  
-  return axios.get(API_URL + "geteventtypes");
+const getEventTypeList = (data) => {  
+  return axios.post(API_URL + "geteventtypes",data);
 };
 const getActiveEventType = () => {  
   return axios.get(API_URL + "getactiveeventtype");
@@ -46,8 +46,11 @@ const deleteEventType = (id) => {
 
 
 // User Types Start
-const getUserTypeList = () => {  
-  return axios.get(API_URL + "getusertypes");
+const getUserTypeList = (data) => {  
+  return axios.post(API_URL + "getusertypes",data);
+};
+const getActiveUserType = () => {  
+  return axios.get(API_URL + "getactiveusertype");
 };
 const createUserType = (data) => {  
   var action = 'createusertype';  
@@ -68,9 +71,38 @@ const deleteUserType = (id) => {
 // User Types End
 
 
+// participants Start
+
+const getParticipantList = (data) => {  
+  return axios.post(API_URL + "getparticipants",data);
+};
+const getActiveParticipant = () => {  
+  return axios.get(API_URL + "getactiveparticipant");
+};
+const createParticipant = (data) => {  
+  var action = 'createparticipant';  
+  return create(data,action)
+};
+const editParticipant = (id) => {
+  var action = 'editparticipant';  
+  return edit(id,action)  
+};
+const updateParticipant = (data) => {  
+  var action = 'updateparticipant';
+  return update(data,action)  
+};
+const deleteParticipant = (id) => {  
+  var action = 'deleteparticipant';
+  return deletes(id,action)
+};
+
+// participants End
+
+
+
 // Company Start
-const getCompanies = () => {  
-  return axios.get(API_URL + "getcompanylist");
+const getCompanies = (data) => {  
+  return axios.post(API_URL + "getcompanylist",data);
 };
 
 const getActiveCompanies = () => {  
@@ -98,8 +130,8 @@ const deleteCompany = (id) => {
 
 
 // User Role Start
-const getUserRoleList = () => {  
-  return axios.get(API_URL + "getuserrolelist");
+const getUserRoleList = (data) => {  
+  return axios.post(API_URL + "getuserrolelist",data);
 };
 const getActiveUserRole = () => {  
   return axios.get(API_URL + "getactiveuserrole");
@@ -127,7 +159,10 @@ export default {
   createEventType, getEventTypeList,getActiveEventType,deleteEventType,editEventType,updateEventType,
 
   // User Types
-  createUserType, getUserTypeList,deleteUserType,editUserType,updateUserType,
+  createUserType, getUserTypeList,deleteUserType,editUserType,updateUserType,getActiveUserType,
+
+  // Participants
+  createParticipant,getParticipantList,getActiveParticipant,editParticipant,updateParticipant,deleteParticipant,
 
   // Conpany
   getCompanies,createCompany,editCompany,updateCompany,deleteCompany,getActiveCompanies,

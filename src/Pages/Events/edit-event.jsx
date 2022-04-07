@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef } from 'react';
 import { Link,useParams,useNavigate } from 'react-router-dom';
-//import ReactQuill from 'react-quill';
+import ReactQuill from 'react-quill';
 import $ from 'jquery';
 
 import { useForm,useFieldArray } from 'react-hook-form';
@@ -9,6 +9,7 @@ import * as yup from 'yup';
 
 import MasterService from "../../Services/master.service";
 import EventService from "../../Services/event.service";
+import AuthService from "../../Services/auth.service";
 
 import { Toast } from 'primereact/toast';
 
@@ -26,6 +27,7 @@ const EditEvent = () => {
   const navigate  = useNavigate();
   const params = useParams();
   const [activeEventTypeList, setActiveEventTypeList] = useState([]);
+  const [activeParticipantList, setActiveParticipantList] = useState([]);
 
   const {setValue, getValues, control, watch,register, handleSubmit,reset, formState: { errors }} = useForm(
   {
@@ -50,9 +52,10 @@ const EditEvent = () => {
   
   
 
-    const onSubmitForm = (data) => {        
-      data["createdby"] = "Bhavesh";    
-      data["updatedby"] = "Bhavesh";          
+    const onSubmitForm = (data) => {
+      
+      var currentUserFullname = AuthService.getUserFullname();                  
+      data["updatedby"] = currentUserFullname;
       //console.log(data);
       updateEvent(data)
     }    
@@ -81,12 +84,27 @@ const EditEvent = () => {
                               'p_event_description',
                               'p_event_additional_info',
                               'p_event_location',
-                              'p_event_floor_plan',
-                              'p_event_price',
+                              'p_event_floor_plan',                              
+                              'p_event_price',                              
                               'id'];
               fields.forEach(field => {
-                //console.log(response.data.result[field])
-                setValue(field, response.data.result[field])                          
+                console.log(response.data.result[field])
+
+                if(response.data.result[field] === 'MultiEL'){
+                  setEventLocationshow([{
+                    singleEL: false,
+                    multiEL: true,
+                    multiESingleL: false,
+                  }])
+                }
+                if(response.data.result[field] === 'MultiESingleL'){
+                  setEventLocationshow([{
+                    singleEL: false,
+                    multiEL: false,
+                    multiESingleL: true,
+                  }])
+                }
+                setValue(field, response.data.result[field])                  
               });            
           },
           (error) => {         
@@ -99,14 +117,17 @@ const EditEvent = () => {
       EventService.editChildEvent(editid).then(
         (response) => { 
           if(response.data.result.length > 0){
-            
-            setEventLocationshow([{
-              singleEL: false,
-              multiEL: true,
-              multiESingleL: false,
-            }])
 
-            childeventappend(response.data.result);
+            response.data.result.forEach((dataVal, i) => {
+              if(response.data.result[i]){
+                //console.log(dataVal)
+                childeventappend(response.data.result[i]);
+                if(response.data.result[i]['c_event_price'] > 0){
+                  setValue(`child_event.${i}.paid_check`, true)
+                }
+              }
+            })
+            
             // childeventappend(                                         
             // response.data.result.forEach((dataVal, i) => {                
             //     //console.log(dataVal)
@@ -311,6 +332,7 @@ navigate("/events");
         });
 
         getActiveEventType()
+        getActiveParticipant()
         //addMoreAP()
         //addMoreAPPrePend()
 
@@ -336,6 +358,24 @@ navigate("/events");
   });
 }
 
+// Get Active Participant
+const getActiveParticipant = ()=>{
+  MasterService.getActiveParticipant().then((res)=>{
+    if(res.status === 200){          
+      //console.log(res.data.result)
+      setActiveParticipantList(res.data.result)
+    }
+  }
+).catch(error => {
+  console.log(error)
+});
+}
+
+const onEventDescriptionChange = (state) => {  
+  setValue("p_event_description", state);
+};
+
+const eventDescriptionWatch = watch("p_event_description");
   return (
     <div>
 
@@ -350,7 +390,7 @@ navigate("/events");
         <form onSubmit={handleSubmit(onSubmitForm)}>
         <div className="page-header">
           <div className="row">
-            <div className="col-sm-2">
+            <div className="col-sm-4">
               <h3 className="page-title">Edit Event</h3>
               <ul className="breadcrumb">
                 <li className="breadcrumb-item"><Link to="/events">Events</Link></li>
@@ -377,14 +417,14 @@ navigate("/events");
               </div>
             </div>
 
-            <div className="col-sm-2">
+            {/* <div className="col-sm-2">
               <div className="form-group">                
                 <select className="form-select" {...register("p_event_price_type")}>                  
                   <option value="sprice">Single Price</option>
-                  <option value="dprice">Different Prices</option>                  
-                </select>
+                  {/* <option value="dprice">Different Prices</option>                   */}
+                {/*</select>
               </div>
-            </div>
+            </div> */}
 
             <div className="col-sm-2">
               <div className="form-group">                
@@ -468,8 +508,8 @@ navigate("/events");
                   <div className="form-group">
                     <label>Event Description</label>                    
                     {/* <textarea className="form-control" rows="10"></textarea> */}
-                    {/* <ReactQuill modules={modules} {...register("p_event_description")}/> */}
-                    <textarea className="form-control" style={{height:'150px'}} {...register("p_event_description")}/>  
+                    <ReactQuill value={eventDescriptionWatch || ''} onChange={(e)=>onEventDescriptionChange(e)}/>
+                    {/* <textarea className="form-control" style={{height:'150px'}} {...register("p_event_description")}/>   */}
                   </div>
                 </div>
                
@@ -480,7 +520,7 @@ navigate("/events");
                   </div>
                 </div>
 
-                <div className="col-sm-3 col-md-3">
+                {(eventLocationshow[0].singleEL ===true || eventLocationshow[0].multiESingleL === true) && <div className="col-sm-3 col-md-3">
                   <div className="form-group">
                     <label>Add Location</label>                   
                     <div className="input-group">
@@ -488,7 +528,7 @@ navigate("/events");
                       <span className="input-group-append input-group-addon"><span className="input-group-text"><i className="fa fa-map-marker" /></span></span>
                     </div> 
                   </div>
-                </div>
+                </div>}
 
                 <div className="col-sm-3 col-md-3">
                   <div className="form-group">
@@ -497,7 +537,7 @@ navigate("/events");
                   </div>
                 </div>
 
-                {(eventLocationshow[0].singleEL ===true || eventLocationshow[0].multiESingleL === true) && <div className="col-sm-3 col-md-3">
+                {(eventLocationshow[0].singleEL ===true) && <div className="col-sm-3 col-md-3">
                   <div className="form-group">
                     <label>Add Price</label>                    
                     <input type="text" className="form-control" placeholder='INR' {...register("p_event_price")}/>
@@ -597,12 +637,23 @@ navigate("/events");
                     </div>
                     }
 
-                    {eventLocationshow[0].multiEL ===true && <div className="col-sm-2">
+                    {(eventLocationshow[0].multiEL ===true || eventLocationshow[0].multiESingleL === true) && <div className="col-sm-1">
+                      <div className="form-group">                 
+                      <label>&nbsp;</label>
+                        <div className="form-check mt-2">      
+                          <input className="form-check-input" ref={register(`child_event.${i}.paid_check_1`)} type="checkbox" id={`${i}`} {...register(`child_event.${i}.paid_check`)}/>
+                          <label className="form-check-label" htmlFor={`${i}`}>Paid?</label>
+                        </div>                        
+                      </div>                      
+                    </div>
+                    }
+
+                    {(eventLocationshow[0].multiEL ===true || eventLocationshow[0].multiESingleL === true) && <div className="col-sm-2">
                       <div className="form-group">
                         <label>Add Price</label>
-                        <input className="form-control" type="text" placeholder='INR'                            
+                        <input className="form-control" ref={register(`child_event.${i}.paid_check_1`)} type="text" placeholder='INR'                            
                         name="c_event_price"                            
-                        {...register(`child_event.${i}.c_event_price`)}/>
+                        {...register(`child_event.${i}.c_event_price`)} disabled={!watch(`child_event.${i}.paid_check`)}/>
                       </div>
                     </div>
                     }
@@ -635,7 +686,7 @@ navigate("/events");
                   
                   <div className="settings-widget">
                     <div className="h3 card-title">                        
-                      <label>Additional Participates</label>
+                      <label>Additional Participants</label>
                     </div>
 
                     {apfields.map((x, i) => { 
@@ -644,12 +695,11 @@ navigate("/events");
                     <div className="row row-sm" key={i}>                                          
                       <div className="col-sm-4">
                         <div className="form-group">
-                          <label>Host(Auto Complete)</label>
-                          <input className="form-control" type="text"  
-                          
-                          value={x.value}                          
-                          name="ep_host_name"                                                        
-                            {...register(`ap.${i}.ep_host_name`)} />
+                          <label>Participant</label>                          
+                            <select className="form-select" {...register(`ap.${i}.ep_host_name`)}>                  
+                            <option value="">Select Participant</option>
+                            {activeParticipantList.map(({ id, name }, index) => <option value={name}>{name}</option>)}  
+                          </select> 
                         </div>
                       </div>
                       <div className="col-sm-4">

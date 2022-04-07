@@ -24,6 +24,9 @@ import Rsvp3 from './front/rsvp-form/rsvp-3'
 import EventType from './Pages/Masters/event-type'
 import UserType from './Pages/Masters/user-type'
 import EditEvent from './Pages/Events/edit-event'
+import RSVPEditForm from './Pages/RSVP/rsvp-form-edit'
+import Participants from './Pages/Masters/participants'
+import RsvpAttendee from './front/rsvp-form/rsvp-attendee'
 
 function App() {
     return ( 
@@ -40,6 +43,7 @@ function App() {
 
                 {/* RSVP Card */}
                 <Route path="/rsvp-form" element={<RSVPForm/>}/>
+                <Route path="/rsvp-form-edit/:id" element={<RSVPEditForm/>}/>
                 <Route path="/rsvp-list" element={<RSVPList/>}/>
 
                 {/* Post Event */}
@@ -61,9 +65,11 @@ function App() {
                 <Route path="/profile" element={<Profile/>}/>
 
                 {/* Masters */}
-
-                <Route path="/event-type" element={<EventType/>}/>
+                
                 <Route path="/user-type" element={<UserType/>}/>
+                <Route path="/event-type" element={<EventType/>}/>
+                <Route path="/participants" element={<Participants/>}/>
+                
                 
                 
 
@@ -73,7 +79,8 @@ function App() {
             <Route path="/register" element={<Register/>} />          
 
             {/* Front RSVP Form */}  
-            <Route path="/rsvp" element={<Rsvp/>} />          
+            <Route path="/rsvp/:id" element={<Rsvp/>} />
+            <Route path="/rsvp-attendee-form/:id" element={<RsvpAttendee/>} />          
             <Route path="/rsvp-2" element={<Rsvp2/>} />
             <Route path="/rsvp-3" element={<Rsvp3/>} />
         </Routes>

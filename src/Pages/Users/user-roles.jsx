@@ -14,6 +14,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import MasterService from "../../Services/master.service";
+import AuthService from "../../Services/auth.service";
 import { Toast } from 'primereact/toast';
 import * as yup from 'yup';
 
@@ -57,8 +58,11 @@ const UserRoles = () => {
   );
 
 const onSubmitForm = (data) => {
-    data["createdby"] = "Bhavesh";    
-    data["updatedby"] = "Bhavesh";  
+
+  var currentUserFullname = AuthService.getUserFullname();        
+    data["createdby"] = currentUserFullname;    
+    data["updatedby"] = currentUserFullname;
+    
     if(isAddMode){
       data["id"] = ""      
       createUserRole(data)
@@ -94,7 +98,7 @@ const handleDeleteUserRole = () => {
     
     MasterService.getActiveCompanies().then((res)=>{
       if(res.status === 200){          
-        console.log(res.data.result)
+        //console.log(res.data.result)
         setActiveCompanyList(res.data.result)
       }
     }
@@ -105,11 +109,11 @@ const handleDeleteUserRole = () => {
 
 
   // Get All Record
-  const getAllUserRoles = ()=>{
-    MasterService.getUserRoleList().then((res)=>{
+  const getAllUserRoles = (data)=>{
+    MasterService.getUserRoleList(data).then((res)=>{
       if(res.status === 200){          
-        //console.log(res.data.result)
-        setData(res.data.result)
+        //console.log(res.data.result.rows)
+        setData(res.data.result.rows)
       }
     }
   ).catch(error => {
@@ -223,8 +227,8 @@ const handleDeleteUserRole = () => {
       },
       {
         title: 'For Company',
-        dataIndex: 'companyid',
-        sorter: (a, b) => a.companyid.length - b.companyid.length,
+        dataIndex: 'company_name',
+        sorter: (a, b) => a.company_name.length - b.company_name.length,
       },      
       {
         title: 'Created By',
@@ -267,7 +271,14 @@ const handleDeleteUserRole = () => {
           ),
       },
     ]
-    
+  // Search start
+  const { register:searchRegister, handleSubmit:searchHandleSubmit,reset:searchReset,setValue:searchSetValue, formState: { errors:searchErrors }} = useForm();
+
+  const onSearchBtn = (data)=>{
+    console.log(data)
+    getAllUserRoles(data)
+  }
+  // Search end  
 
   return (
     
@@ -295,36 +306,35 @@ const handleDeleteUserRole = () => {
           </div>
           {/* /Page Header */}
           {/* Search Filter */}
+          <form onSubmit={searchHandleSubmit(onSearchBtn)}>
           <div className="row filter-row">
             <div className="col-sm-6 col-md-3">  
-              <div className="form-group form-focus">
-                <input type="text" className="form-control floating" />
-                <label className="focus-label">Role Name</label>
+              <div className="form-group">
+                <input type="text" className="form-control" {...searchRegister('by_name')} placeholder="Role Name"/>                
               </div>
             </div>
             <div className="col-sm-6 col-md-3"> 
-              <div className="form-group form-focus select-focus">
-                <select className="select floating"> 
+              <div className="form-group">
+                <select className="form-select" {...searchRegister('by_company')}> 
                   <option value="">Select For Company</option>
                   {activeCompanyList.map(({ id, company_name }, index) => <option value={id}>{company_name}</option>)}                  
-                </select>
-                <label className="focus-label">For Company</label>
+                </select>                
               </div>
             </div>            
             <div className="col-sm-6 col-md-3"> 
-              <div className="form-group form-focus select-focus">
-                <select className="select floating"> 
+              <div className="form-group">
+                <select className="form-select" {...searchRegister('by_status')}> 
                   <option value="">Select Status</option>
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>                  
-                </select>
-                <label className="focus-label">Status</label>
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>                  
+                </select>                
               </div>
             </div>
             <div className="col-sm-6 col-md-3">  
-              <a href="#" className="btn btn-success btn-block w-100"> Search </a>  
+              <input type="submit" className="btn btn-success btn-block w-100" value="Search" />
             </div>     
           </div>
+          </form>
           {/* /Search Filter */}
           <div className="row">
             <div className="col-md-12">

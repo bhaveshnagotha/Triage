@@ -59,6 +59,7 @@ const LeftSideBar = () => {
                   <li><Link className={pathname.includes('/user-type') ?"active" :""} to="/user-type">User Types</Link></li>
                   
                   <li><Link className={pathname.includes('/event-type') ?"active" :""} to="/event-type">Event Types</Link></li>
+                  <li><Link className={pathname.includes('/participants') ?"active" :""} to="/participants">Participant List</Link></li>
                                     
                 </ul>
               </li>

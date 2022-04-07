@@ -1920,9 +1920,9 @@ table.dataTable thead > tr > td.sorting {
 	margin-bottom: 30px;
 	text-align: center;
 }
-.account-box .form-group {
+/* .account-box .form-group {
 	margin-bottom: 25px;
-}
+} */
 .account-box .account-btn {
 	background: #B44C27;
 	background: -moz-linear-gradient(left, #B44C27  0%, #9b320f  100%);
@@ -8629,4 +8629,9 @@ ul.comment-list li ul.children {
 
 .p-toast .p-toast-message{
 	word-spacing: 0px!important;
+}
+
+
+.ql-container {    
+    font-family: unset!important;    
 }

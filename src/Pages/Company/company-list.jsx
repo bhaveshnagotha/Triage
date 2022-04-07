@@ -59,8 +59,8 @@ const CompanyList = () => {
 
 
   // Get All Record
-  const getAllCompanies = ()=>{
-    MasterService.getCompanies().then((res)=>{
+  const getAllCompanies = (data)=>{
+    MasterService.getCompanies(data).then((res)=>{
       if(res.status === 200){          
         //console.log(res.data.result.rows)
         setData(res.data.result)
@@ -294,6 +294,15 @@ const  createCompanyFrm = () => {
       },
     ]   
 
+     // Search start
+  const { register:searchRegister, handleSubmit:searchHandleSubmit,reset:searchReset,setValue:searchSetValue, formState: { errors:searchErrors }} = useForm();
+
+  const onSearchBtn = (data)=>{
+    console.log(data)
+    getAllCompanies(data)
+  }
+  // Search end  
+
   return (    
     <>
       <div className="page-wrapper">           
@@ -313,47 +322,42 @@ const  createCompanyFrm = () => {
           </div>
           {/* /Page Header */}
           {/* Search Filter */}
+          <form onSubmit={searchHandleSubmit(onSearchBtn)}>
           <div className="row filter-row">
             <div className="col-sm-4 col-md-2">  
-              <div className="form-group form-focus">
-              
-
-                <input type="text" className="form-control floating" />
-                <label className="focus-label">Company Name</label>
+              <div className="form-group">
+                <input type="text" className="form-control" {...searchRegister('by_company_name')} placeholder="Company Name"/>                
               </div>
             </div>
             <div className="col-sm-4 col-md-2"> 
-              <div className="form-group form-focus">
-                <input type="text" className="form-control floating" />
-                <label className="focus-label">Country Name</label>
+              <div className="form-group">
+                <input type="text" className="form-control" {...searchRegister('by_country_name')} placeholder="Country Name"/>                
               </div>
             </div>
             <div className="col-sm-4 col-md-2"> 
-              <div className="form-group form-focus">
-                <input type="text" className="form-control floating" />
-                <label className="focus-label">State Name</label>
+              <div className="form-group">
+                <input type="text" className="form-control" {...searchRegister('by_state_name')} placeholder="State Name"/>                
               </div>
             </div>
             <div className="col-sm-4 col-md-2"> 
-              <div className="form-group form-focus">
-                <input type="text" className="form-control floating" />
-                <label className="focus-label">City Name</label>
+              <div className="form-group">
+                <input type="text" className="form-control" {...searchRegister('by_city_name')} placeholder="City Name"/>                
               </div>
             </div>
             <div className="col-sm-4 col-md-2"> 
-              <div className="form-group form-focus select-focus">
-                <select className="select floating"> 
-                  <option>Select Status</option>
-                  <option>Active</option>
-                  <option>Inactive</option>                  
-                </select>
-                <label className="focus-label">Status</label>
+              <div className="form-group">
+                <select className="form-select" {...searchRegister('by_status')}> 
+                  <option value="">Select Status</option>
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>                  
+                </select>                
               </div>
             </div>
             <div className="col-sm-6 col-md-2">  
-              <a href="#" className="btn btn-success btn-block w-100"> Search </a>  
+              <input type="submit" className="btn btn-success btn-block w-100" value="Search" />
             </div>     
           </div>
+          </form>
           {/* /Search Filter */}
           <div className="row">
             <div className="col-md-12">

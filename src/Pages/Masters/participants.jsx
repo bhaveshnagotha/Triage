@@ -16,26 +16,28 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 import MasterService from "../../Services/master.service";
+import AuthService from "../../Services/auth.service";
 import { Toast } from 'primereact/toast';
 
 import moment from 'moment';
-import AuthService from "../../Services/auth.service";
 
 let schema = yup.object().shape({
-  eventtype	: yup.string().required("Please enter event type"),
+  name : yup.string().required("Please enter name"),
 });
 
 
-const EventType = () => {
+const Participants = () => {
 
   const [data, setData] = useState([]);
 
   const [editid, setEditId] = useState(null);
   const [isAddMode, setIsAddMode] = useState(true);
 
-  const closeModalRefDelEventType= useRef(null);
-  const closeModalRefAddEventType= useRef(null);
+  const closeModalRefDelParticipant= useRef(null);
+  const closeModalRefAddParticipant= useRef(null);
   const toastMsg = useRef(null);
+
+
 
   const displaySuccess = (msg) => {
       toastMsg.current.show({severity: 'success', summary: 'Success', detail: msg});   
@@ -44,51 +46,53 @@ const EventType = () => {
       toastMsg.current.show({severity: 'error', summary: 'Error', detail: msg});   
   }
 
-
   const { register, handleSubmit,reset,setValue, formState: { errors }} = useForm(
     {
       resolver:yupResolver(schema),
     }
   );
 
-  const onSubmitForm = (data) => {        
+
+
+  const onSubmitForm = (data) => {  
     
     var currentUserFullname = AuthService.getUserFullname();        
     data["createdby"] = currentUserFullname;    
-    data["updatedby"] = currentUserFullname;    
+    data["updatedby"] = currentUserFullname;
+
     //console.log(data);
     if(isAddMode){
       data["id"] = ""      
-      createEventType(data)
+      createParticipant(data)
     }else{      
-      updateEventType(data)
+      updateParticipant(data)
     }
   } 
   //console.log(errors);
-  const  createEventTypeFrm = () => {
+  const  createParticipantFrm = () => {
     setIsAddMode(true);
     reset();
 }
 
   // Delete record
-  const handleDeleteEventType = () => {    
+  const handleDeleteParticipant = () => {    
     
-    MasterService.deleteEventType(editid).then((res)=>{
+    MasterService.deleteParticipant(editid).then((res)=>{
       if(res.status === 200){          
-        getAllEventTypes()
+        getAllParticipants()
         displaySuccess(res.data.message)
-        closeModalRefDelEventType.current.click();
+        closeModalRefDelParticipant.current.click();
       }
     }
     ).catch(error => {
       displayError(error)
-      closeModalRefDelEventType.current.click();
+      closeModalRefDelParticipant.current.click();
     });
   }
 
   // Get All Record
-  const getAllEventTypes = (data)=>{    
-    MasterService.getEventTypeList(data).then((res)=>{
+  const getAllParticipants = (data)=>{
+    MasterService.getParticipantList(data).then((res)=>{
       if(res.status === 200){          
         //console.log(res.data.result)
         setData(res.data.result)
@@ -100,15 +104,15 @@ const EventType = () => {
 }
 
   // Insert Record
-  const createEventType = (data) => {
+  const createParticipant = (data) => {
 
-  MasterService.createEventType(data).then(
+  MasterService.createParticipant(data).then(
     (response) => {
         if(response.status === 200) {
             reset()
             displaySuccess(response.data.message)
-            closeModalRefAddEventType.current.click();
-            getAllEventTypes()
+            closeModalRefAddParticipant.current.click();
+            getAllParticipants()
             
         }else{
             displayError(response.data.message)
@@ -129,21 +133,17 @@ const EventType = () => {
 
 }
 
-
-
-
-
 // Edit Record
-  const editEventType = (id) => {
+  const editParticipant = (id) => {
 
     reset();      
     setIsAddMode(false);
-    MasterService.editEventType(id).then(
+    MasterService.editParticipant(id).then(
       (response) => {            
-          //console.log(response.data.result)    
-          const fields = ['eventtype', 'status', 'id'];
+          //console.log(response.data.result.rows[0])    
+          const fields = ['name', 'status', 'id'];
           fields.forEach(field => {
-            //console.log(response.data.result[field])
+            //console.log(response.data.result)
             setValue(field, response.data.result[field])                          
           });            
       },
@@ -153,16 +153,16 @@ const EventType = () => {
   );
   }
 
-  // Insert Record
-  const updateEventType = (data) => {
+  // Update Record
+  const updateParticipant = (data) => {
 
-    MasterService.updateEventType(data).then(
+    MasterService.updateParticipant(data).then(
       (response) => {        
           if(response.status === 200) {
               reset()
               displaySuccess(response.data.message)
-              closeModalRefAddEventType.current.click();
-              getAllEventTypes()
+              closeModalRefAddParticipant.current.click();
+              getAllParticipants()
               
           }else{
               displayError(response.data.message)
@@ -182,10 +182,8 @@ const EventType = () => {
       }
   );
   
-  }
-
- 
-
+  }   
+  
   useEffect( ()=>{
     if($('.select').length > 0) {
       $('.select').select2({
@@ -193,14 +191,15 @@ const EventType = () => {
         width: '100%'
       });
     }
-    getAllEventTypes();
-  },[]);    
+    getAllParticipants()
+  },[]);  
+
     const columns = [    
       
       {
-        title: 'Event Type',
-        dataIndex: 'eventtype',        
-        sorter: (a, b) => a.eventtype.length - b.eventtype.length,
+        title: 'Name',
+        dataIndex: 'name',        
+        sorter: (a, b) => a.name.length - b.name.length,
       },
          
       {
@@ -237,30 +236,29 @@ const EventType = () => {
             <div className="dropdown dropdown-action text-center">
               <a href="#" className="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
               <div className="dropdown-menu dropdown-menu-right">
-                <a className="dropdown-item" href="#" onClick={() =>editEventType(record.id)} data-bs-toggle="modal" data-bs-target="#add_event"><i className="fa fa-pencil m-r-5" /> Edit</a>
-                <a className="dropdown-item" href="#" onClick={() =>setEditId(record.id)} data-bs-toggle="modal" data-bs-target="#delete_event"><i className="fa fa-trash-o m-r-5" /> Delete</a>
+                <a className="dropdown-item" href="#" onClick={() =>editParticipant(record.id)} data-bs-toggle="modal" data-bs-target="#add_participant"><i className="fa fa-pencil m-r-5" /> Edit</a>
+                <a className="dropdown-item" href="#" onClick={() =>setEditId(record.id)} data-bs-toggle="modal" data-bs-target="#delete_participant"><i className="fa fa-trash-o m-r-5" /> Delete</a>
               </div>
             </div>
           ),
       },
     ]
     
+// Search start
+const { register:searchRegister, handleSubmit:searchHandleSubmit,reset:searchReset,setValue:searchSetValue, formState: { errors:searchErrors }} = useForm();
 
-    // Search start
-    const { register:searchRegister, handleSubmit:searchHandleSubmit,reset:searchReset,setValue:searchSetValue, formState: { errors:searchErrors }} = useForm();
-
-    const onSearchBtn = (data)=>{
-      console.log(data)
-      getAllEventTypes(data)
-    }
-    // Search end
+const onSearchBtn = (data)=>{
+  console.log(data)
+  getAllParticipants(data)
+}
+// Search end
 
   return (
     
     <>
 
       <div className="page-wrapper">           
-        <Toast ref={toastMsg} />
+      <Toast ref={toastMsg} />
 
         {/* Page Content */}
         <div className="content container-fluid">
@@ -268,24 +266,24 @@ const EventType = () => {
           <div className="page-header">
             <div className="row align-items-center">
               <div className="col">
-                <h3 className="page-title">Event Type </h3>
+                <h3 className="page-title">Participants </h3>
                 <ul className="breadcrumb">
-                  <li className="breadcrumb-item"><Link to="/event-type">Event Type</Link></li>
+                  <li className="breadcrumb-item"><Link to="/user-type">Participant</Link></li>
                   <li className="breadcrumb-item active">List</li>
                 </ul>
               </div>
               <div className="col-auto float-end ml-auto">
-                <a href="#" onClick={()=>createEventTypeFrm()} className="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_event"><i className="fa fa-plus" /> Add Event Type</a>
+                <a href="#" onClick={()=>createParticipantFrm()} className="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_participant"><i className="fa fa-plus" /> Add Participant</a>
               </div>
             </div>
           </div>
           {/* /Page Header */}
           {/* Search Filter */}
           <form onSubmit={searchHandleSubmit(onSearchBtn)}>
-          <div className="row filter-row">          
+          <div className="row filter-row">
             <div className="col-sm-6 col-md-3">  
               <div className="form-group">
-                <input type="text" className="form-control" {...searchRegister('by_name')} placeholder="Event Type"/>                
+                <input type="text" className="form-control" {...searchRegister('by_name')} placeholder="Name"/>                
               </div>
             </div>                       
             <div className="col-sm-6 col-md-3"> 
@@ -297,9 +295,9 @@ const EventType = () => {
                 </select>                
               </div>
             </div>
-            <div className="col-sm-6 col-md-3">                
+            <div className="col-sm-6 col-md-3">  
               <input type="submit" className="btn btn-success btn-block w-100" value="Search" />
-            </div>                 
+            </div>     
           </div>
           </form>
           {/* /Search Filter */}
@@ -322,13 +320,13 @@ const EventType = () => {
           </div>
         </div>
         {/* /Page Content */}
-        {/* Add Event Modal */}
-        <div id="add_event" className="modal custom-modal fade" role="dialog">
+        {/* Add User Modal */}
+        <div id="add_participant" className="modal custom-modal fade" role="dialog">
           <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">{isAddMode ===true ? 'Add' : 'Edit'} Event Type</h5>
-                <button type="button" className="close" ref={closeModalRefAddEventType} data-bs-dismiss="modal" aria-label="Close">
+                <h5 className="modal-title">{isAddMode ===true ? 'Add' : 'Edit'} Participant</h5>
+                <button type="button" className="close" ref={closeModalRefAddParticipant} data-bs-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">×</span>
                 </button>
               </div>
@@ -338,10 +336,10 @@ const EventType = () => {
                     <input type="hidden" {...register("id")}/>
                     <div className="col-sm-6">
                       <div className="form-group">
-                        <label>Event Type <span className="text-danger">*</span></label>
-                        <input className={errors.eventtype? 'form-control is-invalid': 'form-control'} type="text" name="eventtype" {...register("eventtype")}/>
-                        {errors.eventtype	 && <div className="invalid-feedback">
-                          {errors.eventtype?.message}
+                        <label>Name <span className="text-danger">*</span></label>
+                        <input className={errors.name ? 'form-control is-invalid': 'form-control'} type="text" name="name" {...register("name")}/>
+                        {errors.name && <div className="invalid-feedback">
+                          {errors.name?.message}
                         </div>}
                       </div>
                     </div>    
@@ -365,23 +363,23 @@ const EventType = () => {
             </div>
           </div>
         </div>
-        {/* /Add Event Modal */}
-        {/* Delete Event Modal */}
-        <div className="modal custom-modal fade" id="delete_event" role="dialog">
+        {/* /Add Participant Modal */}
+        {/* Delete Participant Modal */}
+        <div className="modal custom-modal fade" id="delete_participant" role="dialog">
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-body">
                 <div className="form-header">
-                  <h3>Delete Event</h3>
+                  <h3>Delete Participant</h3>
                   <p>Are you sure want to delete?</p>
                 </div>
                 <div className="modal-btn delete-action">
                   <div className="row">
                     <div className="col-6">
-                      <a onClick={()=>handleDeleteEventType()} className="btn btn-primary continue-btn">Delete</a>
+                      <a onClick={()=>handleDeleteParticipant()} className="btn btn-primary continue-btn">Delete</a>
                     </div>
                     <div className="col-6">
-                      <a data-bs-dismiss="modal" ref={closeModalRefDelEventType} className="btn btn-primary cancel-btn">Cancel</a>
+                      <a data-bs-dismiss="modal" ref={closeModalRefDelParticipant} className="btn btn-primary cancel-btn">Cancel</a>
                     </div>
                   </div>
                 </div>
@@ -389,7 +387,7 @@ const EventType = () => {
             </div>
           </div>
         </div>
-        {/* /Delete Event Modal */}
+        {/* /Delete Participant Modal */}
 
       </div>
         
@@ -397,4 +395,4 @@ const EventType = () => {
   )
 }
 
-export default EventType
+export default Participants

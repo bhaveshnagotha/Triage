@@ -16,6 +16,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 import MasterService from "../../Services/master.service";
+import AuthService from "../../Services/auth.service";
 import { Toast } from 'primereact/toast';
 
 import moment from 'moment';
@@ -53,10 +54,12 @@ const UserType = () => {
 
 
 
-  const onSubmitForm = (data) => {        
+  const onSubmitForm = (data) => {  
+    
+    var currentUserFullname = AuthService.getUserFullname();        
+    data["createdby"] = currentUserFullname;    
+    data["updatedby"] = currentUserFullname;
 
-    data["createdby"] = "Bhavesh";    
-    data["updatedby"] = "Bhavesh";    
     //console.log(data);
     if(isAddMode){
       data["id"] = ""      
@@ -88,8 +91,8 @@ const UserType = () => {
   }
 
   // Get All Record
-  const getAllUserTypes = ()=>{
-    MasterService.getUserTypeList().then((res)=>{
+  const getAllUserTypes = (data)=>{
+    MasterService.getUserTypeList(data).then((res)=>{
       if(res.status === 200){          
         //console.log(res.data.result)
         setData(res.data.result)
@@ -241,6 +244,14 @@ const UserType = () => {
       },
     ]
     
+// Search start
+const { register:searchRegister, handleSubmit:searchHandleSubmit,reset:searchReset,setValue:searchSetValue, formState: { errors:searchErrors }} = useForm();
+
+const onSearchBtn = (data)=>{
+  console.log(data)
+  getAllUserTypes(data)
+}
+// Search end
 
   return (
     
@@ -268,27 +279,27 @@ const UserType = () => {
           </div>
           {/* /Page Header */}
           {/* Search Filter */}
+          <form onSubmit={searchHandleSubmit(onSearchBtn)}>
           <div className="row filter-row">
             <div className="col-sm-6 col-md-3">  
-              <div className="form-group form-focus">
-                <input type="text" className="form-control floating" />
-                <label className="focus-label">User Type</label>
+              <div className="form-group">
+                <input type="text" className="form-control" {...searchRegister('by_name')} placeholder="User Type"/>                
               </div>
             </div>                       
             <div className="col-sm-6 col-md-3"> 
-              <div className="form-group form-focus select-focus">
-                <select className="select floating"> 
-                  <option>Select Status</option>
-                  <option>Active</option>
-                  <option>Inactive</option>                  
-                </select>
-                <label className="focus-label">Status</label>
+              <div className="form-group">
+                <select className="form-select" {...searchRegister('by_status')}> 
+                  <option value="">Select Status</option>
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>                  
+                </select>                
               </div>
             </div>
             <div className="col-sm-6 col-md-3">  
-              <a href="#" className="btn btn-success btn-block w-100"> Search </a>  
+              <input type="submit" className="btn btn-success btn-block w-100" value="Search" />
             </div>     
           </div>
+          </form>
           {/* /Search Filter */}
           <div className="row">
             <div className="col-md-12">

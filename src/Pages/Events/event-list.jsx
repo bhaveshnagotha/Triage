@@ -42,7 +42,7 @@ const EventList = () => {
     const getAllEvents = ()=>{      
       EventService.getEvents(eventMode).then((res)=>{
         if(res.status === 200){          
-          console.log(res.data.result)
+          //console.log(res.data.result)
           setData(res.data.result)
         }
       }
@@ -141,7 +141,7 @@ const handleDeleteEvent = () => {
         {/* /Page Header */}
 
         {/* Search Filter */}
-        <div className="row filter-row">
+        {/* <div className="row filter-row">
           <div className="col-sm-6 col-md-2">  
             <div className="form-group form-focus">
               <input type="text" className="form-control floating" />
@@ -177,7 +177,7 @@ const handleDeleteEvent = () => {
           <div className="col-sm-6 col-md-2">  
             <a href="#" className="btn btn-success btn-block w-100"> Search </a>  
           </div>     
-        </div>
+        </div> */}
         {/* Search Filter */}
 
         <div className="row">
@@ -200,7 +200,7 @@ const handleDeleteEvent = () => {
                 return (
                   <div className="col-lg-4 col-sm-6 col-md-4 col-xl-3" key={i}>
                   <div className="card">
-                    <div className="card-body">
+                    <div className="card-body" style={{height: '260px'}}>
                     <div className="dropdown dropdown-action profile-action">
                       <a href="#" className="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
                       <div className="dropdown-menu dropdown-menu-right">                        
@@ -209,7 +209,7 @@ const handleDeleteEvent = () => {
                       </div>
                     </div>
                     <Link to={"/event-view/"+item.id}><h6 className="card-title m-b-15">{item.p_event_title}</h6></Link>
-                    <Link to={"/event-view/"+item.id}><img src={placeholders} style={{width:'-webkit-fill-available'}}/></Link>
+                    
                     <table className="table table-striped table-border mt-2">
                       <tbody>
                         <tr>
@@ -224,16 +224,16 @@ const handleDeleteEvent = () => {
                           <td>Tickets:</td>
                           <td className="text-end">Sold 40/100</td>
                         </tr>                        
-                        <tr>
+                        {/* <tr>
                           <td>Event Type:</td>
                           <td className="text-end">{item.p_eventtypeid}</td>
-                        </tr>
+                        </tr> */}
                       </tbody>
                     </table>
-                    <p className="m-b-5">Sold <span className="text-success float-end">40%</span></p>
+                    {/* <p className="m-b-5">Sold <span className="text-success float-end">40%</span></p>
                     <div className="progress progress-xs mb-0">
                       <div className="progress-bar bg-success" role="progressbar" data-bs-toggle="tooltip" title="40%" style={{width: '40%'}} />
-                    </div>
+                    </div> */}
                   </div>
                   </div>
 
@@ -254,7 +254,7 @@ const handleDeleteEvent = () => {
                   return (
                     <div className="col-lg-4 col-sm-6 col-md-4 col-xl-3" key={i}>
                     <div className="card">
-                      <div className="card-body">
+                      <div className="card-body" style={{height: '260px'}}>
                       <div className="dropdown dropdown-action profile-action">
                         <a href="#" className="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
                         <div className="dropdown-menu dropdown-menu-right">
@@ -263,7 +263,7 @@ const handleDeleteEvent = () => {
                         </div>
                       </div>
                       <Link to={"/event-view/"+item.id}><h6 className="card-title m-b-15">{item.p_event_title}</h6></Link>
-                      <Link to={"/event-view/"+item.id}><img src={placeholders} style={{width:'-webkit-fill-available'}}/></Link>
+                      {/* <Link to={"/event-view/"+item.id}><img src={placeholders} style={{width:'-webkit-fill-available'}}/></Link> */}
                       <table className="table table-striped table-border mt-2">
                         <tbody>
                           <tr>
@@ -278,16 +278,16 @@ const handleDeleteEvent = () => {
                             <td>Tickets:</td>
                             <td className="text-end">Sold 40/100</td>
                           </tr>                        
-                          <tr>
+                          {/* <tr>
                             <td>Event Type:</td>
                             <td className="text-end">{item.p_eventtypeid}</td>
-                          </tr>
+                          </tr> */}
                         </tbody>
                       </table>
-                      <p className="m-b-5">Sold <span className="text-success float-end">40%</span></p>
+                      {/* <p className="m-b-5">Sold <span className="text-success float-end">40%</span></p>
                       <div className="progress progress-xs mb-0">
                         <div className="progress-bar bg-success" role="progressbar" data-bs-toggle="tooltip" title="40%" style={{width: '40%'}} />
-                      </div>
+                      </div> */}
                     </div>
                     </div>
 
@@ -307,7 +307,7 @@ const handleDeleteEvent = () => {
                       return (
                         <div className="col-lg-4 col-sm-6 col-md-4 col-xl-3" key={i}>
                         <div className="card">
-                          <div className="card-body">
+                          <div className="card-body"  style={{height: '260px'}}>
                           <div className="dropdown dropdown-action profile-action">
                             <a href="#" className="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
                             <div className="dropdown-menu dropdown-menu-right">
@@ -316,7 +316,7 @@ const handleDeleteEvent = () => {
                             </div>
                           </div>
                           <Link to={"/event-view/"+item.id}><h6 className="card-title m-b-15">{item.p_event_title}</h6></Link>
-                          <Link to={"/event-view/"+item.id}><img src={placeholders} style={{width:'-webkit-fill-available'}}/></Link>
+                          {/* <Link to={"/event-view/"+item.id}><img src={placeholders} style={{width:'-webkit-fill-available'}}/></Link> */}
                           <table className="table table-striped table-border mt-2">
                             <tbody>
                               <tr>
@@ -331,16 +331,16 @@ const handleDeleteEvent = () => {
                                 <td>Tickets:</td>
                                 <td className="text-end">Sold 40/100</td>
                               </tr>                        
-                              <tr>
+                              {/* <tr>
                                 <td>Event Type:</td>
                                 <td className="text-end">{item.p_eventtypeid}</td>
-                              </tr>
+                              </tr> */}
                             </tbody>
                           </table>
-                          <p className="m-b-5">Sold <span className="text-success float-end">40%</span></p>
+                          {/* <p className="m-b-5">Sold <span className="text-success float-end">40%</span></p>
                           <div className="progress progress-xs mb-0">
                             <div className="progress-bar bg-success" role="progressbar" data-bs-toggle="tooltip" title="40%" style={{width: '40%'}} />
-                          </div>
+                          </div> */}
                         </div>
                         </div>
 

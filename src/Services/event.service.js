@@ -27,6 +27,17 @@ const getEvents = (emode) => {
 const getEventDetail = (id) => {  
   return axios.get(API_URL + "geteventdetail/"+id);
 };
+
+const getChildEventsById = (peid)=>{
+  return axios.get(API_URL + "getchildeventsbyid/"+peid);
+}
+
+const getEventParticipatesById = (peid)=>{
+  return axios.get(API_URL + "geteventparticipatesbyid/"+peid);
+}
+
+
+
 const createEvent = (data) => {  
   var action = 'create';  
   return create(data,action)
@@ -84,7 +95,7 @@ const deleteEventParticipates = (id) => {
 
 export default { 
   // Events
-  createEvent, getEvents,getEventDetail,deleteEventP,deleteEventC,deleteEventParticipates,
+  createEvent, getEvents,getChildEventsById,getEventDetail,getEventParticipatesById,deleteEventP,deleteEventC,deleteEventParticipates,
   editEvent,editAdditionalParticipates,editChildEvent,updateEvent,updateChildEvent,updateAdditonalParticipants
 
 };

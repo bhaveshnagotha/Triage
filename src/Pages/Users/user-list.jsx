@@ -31,7 +31,7 @@ let schema = yup.object().shape({
   email: yup.string().required("Please enter email address").email("Please enter valid email address"),
   password: yup.string().required("Please enter password"),    
   usertypeid: yup.string().required("Please select user type"),    
-  roleId: yup.string().required("Please select user role"),    
+  roleid: yup.string().required("Please select user role"),    
   phone: yup.string().nullable(true).matches(phoneRegExp, 'Phone number is not valid')  
   // business_email: yup.string().email("Please enter valid email address"),
   // business_phone_no: yup.string().max(10),
@@ -40,6 +40,8 @@ let schema = yup.object().shape({
 const UserList = () => {
   
   const [activeUserRole, setActiveUserRole] = useState([]);
+  const [activeUserType, setActiveUserType] = useState([]);
+  
 
   const closeModalRef= useRef(null);
   const closeModalRefAddUser= useRef(null);
@@ -101,7 +103,7 @@ const UserList = () => {
       AuthService.editUser(id).then(
         (response) => {            
             //console.log(response.data.result.rows[0])    
-            const fields = ['firstname', 'lastname','phone','username','email','password','usertypeid','roleId','status','id'];
+            const fields = ['firstname', 'lastname','phone','username','email','password','usertypeid','roleid','status','id'];
             fields.forEach(field => {              
               console.log(field)    
               setValue(field, response.data.result.rows[0][field])                            
@@ -216,6 +218,7 @@ const updateUser = (data) => {
     }
     getAllUsers();
     getActiveUserRole()
+    getActiveUserType()
   },[]);    
 
     const columns = [
@@ -242,17 +245,13 @@ const updateUser = (data) => {
       },
       {
         title: 'User Type',
-        dataIndex: 'usertypeid', 
-        sorter: (a, b) => a.usertypeid.length - b.usertypeid.length,
+        dataIndex: 'usertype', 
+        sorter: (a, b) => a.usertype.length - b.usertype.length,
       },
       {
         title: 'Role',
-        dataIndex: 'roleId',
-        render: (text, record) => (
-            <span className={text ==="Admin" ? "badge bg-inverse-danger" :  "badge bg-inverse-success" }
-           >{text}</span>
-          ),
-        sorter: (a, b) => a.roleId.length - b.roleId.length,
+        dataIndex: 'rolename',        
+        sorter: (a, b) => a.rolename.length - b.rolename.length,
       },      
       // {
       //   title: 'Created By',
@@ -308,7 +307,23 @@ const updateUser = (data) => {
   ).catch(error => {
     console.log(error)
   });
-}    
+}
+
+ // Get Active Companies
+ const getActiveUserType = ()=>{
+    
+  MasterService.getActiveUserType().then((res)=>{
+    if(res.status === 200){          
+      console.log(res.data.result)
+      setActiveUserType(res.data.result)
+    }
+  }
+).catch(error => {
+  console.log(error)
+});
+}
+
+
 
   return (
     
@@ -347,8 +362,7 @@ const updateUser = (data) => {
               <div className="form-group">
                 <select className="form-select"> 
                   <option value="">Select Type</option>
-                  <option value="1">Client</option>
-                  <option value="2">Employee</option>
+                  {activeUserType.map(({ id, usertype }, index) => <option value={id}>{usertype}</option>)}                  
                 </select>                
               </div>
             </div>
@@ -467,8 +481,7 @@ const updateUser = (data) => {
 
                         <select className={errors.usertypeid ? 'form-select is-invalid': 'form-select'} {...register("usertypeid")}> 
                           <option value="">User Type</option>
-                          <option value="1">Client</option>
-                          <option value="2">Employee</option>                          
+                          {activeUserType.map(({ id, usertype }, index) => <option value={id}>{usertype}</option>)}                         
                         </select>
                         {/* <div className="form-check form-check-inline">
                           <input defaultChecked type="radio" className="form-check-input" id="client" {...register("usertypeid")} value="1"/>
@@ -494,19 +507,19 @@ const updateUser = (data) => {
                         <label>User Role <span className="text-danger">*</span></label><br/>                                                
                         {/* {activeUserRole.map(({ id, rolename }, index) => 
                         <div className="form-check form-check-inline">
-                          <input defaultChecked type="radio" className="form-check-input" id={id} {...register("roleId")} value={id}/>
+                          <input defaultChecked type="radio" className="form-check-input" id={id} {...register("roleid")} value={id}/>
                           <label className="form-check-label" htmlFor={id}>
                             {rolename}
                           </label>
                         </div>
                         )}     */}
-                        <select className={errors.roleId ? 'form-select is-invalid': 'form-select'} {...register("roleId")}> 
+                        <select className={errors.roleid ? 'form-select is-invalid': 'form-select'} {...register("roleid")}> 
                           <option value="">Select For Company</option>
                           {activeUserRole.map(({ id, rolename }, index) => <option value={id}>{rolename}</option>)}                  
                         </select>                                      
 
-                        {errors.roleId && <div className="invalid-feedback">
-                          {errors.roleId?.message}
+                        {errors.roleid && <div className="invalid-feedback">
+                          {errors.roleid?.message}
                         </div>}
 
                       </div>                      

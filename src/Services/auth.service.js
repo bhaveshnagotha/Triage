@@ -36,4 +36,8 @@ const logout = () => {
 const getCurrentUser = () => {
   return JSON.parse(localStorage.getItem("currentUser"));
 };
-export default { register,updateUser,login,logout, getList,getCurrentUser,deleteUser,editUser};
+
+const getUserFullname = () => {
+  return JSON.parse(localStorage.getItem("currentUser")).firstname+' '+JSON.parse(localStorage.getItem("currentUser")).lastname ;
+};
+export default { register,updateUser,login,logout, getList,getCurrentUser,deleteUser,editUser,getUserFullname};
